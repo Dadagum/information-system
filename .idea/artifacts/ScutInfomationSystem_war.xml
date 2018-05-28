@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="ScutInfomationSystem:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="Scut-InfomationSystem-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="ScutInfomationSystem:war exploded" />
+    </root>
+  </artifact>
+</component>
