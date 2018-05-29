@@ -1,44 +1,11 @@
-package com.dadagum.bean;
+package com.dadagum.api;
 
-import java.util.Date;
-
-public class ActivityInformation implements Information {
-    private int info_id;
-    private int type_id;
+public class ActivityInfoDto {
     private String org_name;
     private String introduction;
     private String name;
     private String start_time;
     private String end_time;
-
-    @Override
-    public String toString() {
-        return "ActivityInformation{" +
-                "info_id=" + info_id +
-                ", type_id=" + type_id +
-                ", org_name='" + org_name + '\'' +
-                ", introduction='" + introduction + '\'' +
-                ", name='" + name + '\'' +
-                ", start_time='" + start_time + '\'' +
-                ", end_time='" + end_time + '\'' +
-                '}';
-    }
-
-    public int getInfo_id() {
-        return info_id;
-    }
-
-    public void setInfo_id(int info_id) {
-        this.info_id = info_id;
-    }
-
-    public int getType_id() {
-        return type_id;
-    }
-
-    public void setType_id(int type_id) {
-        this.type_id = type_id;
-    }
 
     public String getOrg_name() {
         return org_name;

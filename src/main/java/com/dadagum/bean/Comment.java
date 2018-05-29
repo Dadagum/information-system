@@ -9,7 +9,7 @@ public class Comment {
     private int comment_id;
     private int parent_id;
     private int comment_order;
-    private Date create_time;
+    private String create_time;
     private String comment;
 
     public int getUser_id() {
@@ -60,11 +60,11 @@ public class Comment {
         this.comment_order = comment_order;
     }
 
-    public Date getCreate_time() {
+    public String getCreate_time() {
         return create_time;
     }
 
-    public void setCreate_time(Date create_time) {
+    public void setCreate_time(String create_time) {
         this.create_time = create_time;
     }
 
