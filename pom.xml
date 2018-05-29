@@ -51,7 +51,7 @@
   <properties>
     <spring.version>4.2.1.RELEASE</spring.version>
     <mysql.version>6.0.6</mysql.version>
-    <jackson.version>2.0.2</jackson.version>
+    <jackson.version>2.9.0</jackson.version>
     <dbcp2.version>2.2.0</dbcp2.version>
     <servlet.version>4.0.0</servlet.version>
   </properties>
@@ -135,7 +135,19 @@
     <!-- jackson -->
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
       <version>${jackson.version}</version>
     </dependency>
 
