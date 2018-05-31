@@ -1,6 +1,6 @@
 package com.dadagum.bean;
 
-public class TeamInformation implements Information{
+public class TeamInformation {
     private int info_id;
     private int type_id;
     private String title;

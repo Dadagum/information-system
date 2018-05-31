@@ -2,7 +2,7 @@ package com.dadagum.bean;
 
 import java.util.Date;
 
-public class ActivityInformation implements Information {
+public class ActivityInformation {
     private int info_id;
     private int type_id;
     private String org_name;

@@ -4,6 +4,9 @@
        xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+    <!-- package scan -->
+    <context:component-scan base-package="com.dadagum.dao"/>
+
     <!-- database dataSource -->
     <context:property-placeholder location="classpath:jdbc.properties"/>
     <bean id = "dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close" p:driverClassName="${jdbc.driver}"
@@ -11,8 +14,4 @@
 
     <!-- jdbcTemplate -->
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate" p:dataSource-ref="dataSource" />
-
-    <!-- package scan -->
-    <context:component-scan base-package="com.dadagum.dao"/>
-
 </beans>
