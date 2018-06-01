@@ -1,4 +1,4 @@
-package com.dadagum.api;
+package com.dadagum.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;

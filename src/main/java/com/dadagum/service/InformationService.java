@@ -1,6 +1,6 @@
 package com.dadagum.service;
 
-import com.dadagum.api.ActivityInfoDto;
+import com.dadagum.dto.ActivityInfoDto;
 import com.dadagum.bean.ActivityInformation;
 import com.dadagum.bean.TeamRequest;
 import com.dadagum.dao.CategoryDao;
@@ -33,7 +33,7 @@ public class InformationService {
      * @return
      */
     public List<?> getSpecificCategoryInfo(String category){
-        return categoryDao.getCountOfSpecificCategory(category) == 0 ? null : informationDao.getAllCategoryInfo(category);
+        return categoryDao.hasCategory(category) ? informationDao.getAllCategoryInfo(category) : null;
     }
 
     public boolean updateActivityInfo(ActivityInformation activityInformation){
@@ -47,4 +47,5 @@ public class InformationService {
     public void postTeamRequest(TeamRequest request){
         informationDao.addTeamRequest(request);
     }
+
 }

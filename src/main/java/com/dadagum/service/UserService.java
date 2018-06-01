@@ -1,9 +1,11 @@
 package com.dadagum.service;
 
-import com.dadagum.api.UserDto;
+import com.dadagum.dto.UserDto;
 import com.dadagum.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -26,5 +28,13 @@ public class UserService {
      */
     public boolean checkIfUsernameMatchPassword(UserDto userDto){
         return userDao.loginCheck(userDto) > 0;
+    }
+
+    public void update(UserDto userDto, int user_id){
+        userDao.update(userDto, user_id);
+    }
+
+    public UserDto getPersonalInfo(int user_id){
+        return userDao.getPersonalInfo(user_id);
     }
 }

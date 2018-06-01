@@ -1,4 +1,4 @@
-package com.dadagum.api;
+package com.dadagum.dto;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;

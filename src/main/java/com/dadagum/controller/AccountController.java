@@ -1,17 +1,18 @@
 package com.dadagum.controller;
 
-import com.dadagum.api.UserDto;
-import com.dadagum.api.ReturnJson;
-import com.dadagum.dao.UserDao;
+import com.dadagum.dto.UserDto;
+import com.dadagum.dto.ReturnJson;
 import com.dadagum.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 public class AccountController {
@@ -24,7 +25,7 @@ public class AccountController {
      * @param userDto
      * @return
      */
-    @RequestMapping(value = "/registration/execution", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/registration", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ReturnJson<?> register(@Valid UserDto userDto, BindingResult bindingResult){
         System.out.println(userDto);
@@ -52,6 +53,31 @@ public class AccountController {
         }
         System.out.println(loginDto);
         return new ReturnJson<>(loginDto, "login successfully", true);
+    }
+
+    @RequestMapping(value = "/personal/profile/update", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public ReturnJson<?> update(@Valid UserDto userDto, BindingResult bindingResult){
+        System.out.println(userDto);
+        if(bindingResult.hasErrors() ){
+            List<FieldError> list = bindingResult.getFieldErrors();
+            for (FieldError fieldError : list) System.out.println(fieldError.getField());
+            return new ReturnJson<>(null, "fail to update", false);
+        }
+        // default user
+        int user_id = 1; // TODO
+        userService.update(userDto, user_id);
+        userDto.setPassword(null);
+        return new ReturnJson<>(userDto, "update person information successfully", true);
+    }
+
+    @RequestMapping(value = "/personal/profile", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public ReturnJson<?> getPersonalInfo(){
+        // default user
+        int user_id = 1; // TODO
+        UserDto result = userService.getPersonalInfo(user_id);
+        return new ReturnJson<>(result, "successfully", true);
     }
 
 }

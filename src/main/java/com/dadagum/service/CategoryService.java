@@ -21,13 +21,4 @@ public class CategoryService {
         return true;
     }
 
-    /**
-     * to check if specific category exists
-     * @param
-     * @return
-     */
-    public boolean hasCategory(String categoryName){
-        return categoryDao.getCountOfSpecificCategory(categoryName) != 0;
-    }
-
 }

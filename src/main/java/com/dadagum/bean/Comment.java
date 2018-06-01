@@ -1,5 +1,8 @@
 package com.dadagum.bean;
 
+import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class Comment {
@@ -8,9 +11,12 @@ public class Comment {
     private int info_id;
     private int comment_id;
     private int parent_id;
-    private int comment_order;
-    private String create_time;
-    private String comment;
+
+    @DateTimeFormat(pattern = "yyyy:MM:dd hh:mm:ss")
+    private Date create_time;
+
+    @Length(min = 5, max = 500)
+    private Date comment;
 
     public int getUser_id() {
         return user_id;
@@ -52,27 +58,19 @@ public class Comment {
         this.parent_id = parent_id;
     }
 
-    public int getComment_order() {
-        return comment_order;
-    }
-
-    public void setComment_order(int comment_order) {
-        this.comment_order = comment_order;
-    }
-
-    public String getCreate_time() {
+    public Date getCreate_time() {
         return create_time;
     }
 
-    public void setCreate_time(String create_time) {
+    public void setCreate_time(Date create_time) {
         this.create_time = create_time;
     }
 
-    public String getComment() {
+    public Date getComment() {
         return comment;
     }
 
-    public void setComment(String comment) {
+    public void setComment(Date comment) {
         this.comment = comment;
     }
 }

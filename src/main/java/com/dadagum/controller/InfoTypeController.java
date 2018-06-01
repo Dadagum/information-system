@@ -1,6 +1,6 @@
 package com.dadagum.controller;
 
-import com.dadagum.api.ReturnJson;
+import com.dadagum.dto.ReturnJson;
 import com.dadagum.bean.Category;
 import com.dadagum.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;

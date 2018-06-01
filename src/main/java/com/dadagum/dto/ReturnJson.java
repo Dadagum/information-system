@@ -1,4 +1,4 @@
-package com.dadagum.api;
+package com.dadagum.dto;
 
 public class ReturnJson<T> {
     private T data;

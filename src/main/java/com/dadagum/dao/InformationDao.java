@@ -1,6 +1,6 @@
 package com.dadagum.dao;
 
-import com.dadagum.api.ActivityInfoDto;
+import com.dadagum.dto.ActivityInfoDto;
 import com.dadagum.bean.ActivityInformation;
 import com.dadagum.bean.TeamRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +26,8 @@ public class InformationDao {
     private static final String DELETE_ACTIVITY_SQL = "DELETE FROM " + ACT_TABLE_NAME + " WHERE info_id = ?";
 
     private static final String ADD_TEAM_REQUEST_SQL = "INSERT INTO " + TEAM_TABLE_NAME + " VALUES(null, 1, ?, ?, ?)";
+
+    private static final String CHECK_INFO_EXIST_SQL = "SELECT * FROM " + ACT_TABLE_NAME + " WHERE info_id = ? AND type_id = ?";
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -67,5 +69,9 @@ public class InformationDao {
 
     public void addTeamRequest(TeamRequest request){
         jdbcTemplate.update(ADD_TEAM_REQUEST_SQL, request.getTitle(), request.getIntroduction(), request.getUser_id());
+    }
+
+    public boolean hasInfo(int info_id, int type_id){
+        return jdbcTemplate.queryForObject(CHECK_INFO_EXIST_SQL, new Object[]{info_id, type_id}, int.class) == 1;
     }
 }

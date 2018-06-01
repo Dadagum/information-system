@@ -1,7 +1,7 @@
 package com.dadagum.controller;
 
-import com.dadagum.api.ActivityInfoDto;
-import com.dadagum.api.ReturnJson;
+import com.dadagum.dto.ActivityInfoDto;
+import com.dadagum.dto.ReturnJson;
 import com.dadagum.bean.ActivityInformation;
 import com.dadagum.bean.TeamRequest;
 import com.dadagum.service.InformationService;
@@ -61,9 +61,9 @@ public class InformationController {
      * @param infoId
      * @return
      */
-    @RequestMapping(value = "/activity/deletion", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/activity/{infoId}/deletion", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ReturnJson<ActivityInformation> deleteActivityInfo(int infoId){
+    public ReturnJson<ActivityInformation> deleteActivityInfo(@PathVariable int infoId){
         System.out.println(infoId);
         return informationService.deleteActivity(infoId) ? new ReturnJson<>(null, "delete successfully", true) : new ReturnJson<>(null, "fail to delete for the activity does not exist", false);
     }

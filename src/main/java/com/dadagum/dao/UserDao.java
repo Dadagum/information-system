@@ -1,17 +1,24 @@
 package com.dadagum.dao;
 
-import com.dadagum.api.UserDto;
+import com.dadagum.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class UserDao {
 
-    private static final String TABLE_NAME = "user";
+    static final String USER_TABLE_NAME = "user";
 
-    private static final String INSERT_USER_SQL  = "INSERT INTO " + TABLE_NAME + " VALUES(null,?,?,?)";
-    private static final String QUERY_USER_BY_NAME_PASSWORD = "SELECT count(*) FROM " + TABLE_NAME + "WHERE username=? AND password=?";
+    private static final String INSERT_USER_SQL  = "INSERT INTO " + USER_TABLE_NAME + " VALUES(null,?,?,?)";
+
+    private static final String HAS_USER_SQL = "SELECT count(*) FROM " + USER_TABLE_NAME + "WHERE username=? AND password=?";
+
+    private static final String UPDATE_PERSONAL_INFO_SQL = "UPDATE " + USER_TABLE_NAME + " SET password = ? WHERE user_id = ?";
+
+    private static final String GET_PERSONAL_INFO_SQL = "SELECT username, email FROM " + USER_TABLE_NAME + " WHERE user_id = ?";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -34,8 +41,19 @@ public class UserDao {
      * @return 0 if not match or not exist, 1 if match
      */
     public int loginCheck(UserDto userDto){
-        return jdbcTemplate.queryForObject(QUERY_USER_BY_NAME_PASSWORD, new Object[]{userDto.getUsername(), userDto.getPassword()}, int.class);
+        return jdbcTemplate.queryForObject(HAS_USER_SQL, new Object[]{userDto.getUsername(), userDto.getPassword()}, int.class);
     }
 
+    public void update(UserDto userDto, int user_id){
+        jdbcTemplate.update(UPDATE_PERSONAL_INFO_SQL, userDto.getPassword(), user_id);
+    }
 
+    public UserDto getPersonalInfo(int user_id){
+        final UserDto userDto = new UserDto();
+        jdbcTemplate.query(GET_PERSONAL_INFO_SQL, new Object[]{user_id}, resultSet -> {
+            userDto.setEmail(resultSet.getString("email"));
+            userDto.setUsername(resultSet.getString("username"));
+        });
+        return userDto;
+    }
 }

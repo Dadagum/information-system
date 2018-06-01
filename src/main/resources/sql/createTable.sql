@@ -58,8 +58,7 @@ CREATE TABLE comment(
     type_id INT NOT NULL ,
     info_id INT NOT NULL ,
     comment_id INT PRIMARY KEY AUTO_INCREMENT,
-    parent_id INT NOT NULL ,
-    comment_order INT NOT NULL ,
+    parent_id INT ,
     create_time TIMESTAMP ,
     comment TEXT NOT NULL ,
     FOREIGN KEY (user_id) REFERENCES user(user_id)
