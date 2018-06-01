@@ -1,5 +1,6 @@
 package com.dadagum.dao;
 
+import com.dadagum.bean.ActivityInformation;
 import com.dadagum.bean.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,7 +17,8 @@ public class CategoryDao {
 
     private static final String INSERT_TYPE_SQL = "INSERT INTO " + TABLE_NAME + " VALUES(null,?)";
 
-    private static final String GET_COUNT_SQL = "SELECT count(*) from " + TABLE_NAME;
+    private static final String GET_COUNT_SQL = "SELECT count(*) from " + TABLE_NAME + " WHERE category = ?";
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -25,6 +27,7 @@ public class CategoryDao {
     }
 
     public int getCountOfSpecificCategory(String category){
-        return jdbcTemplate.queryForObject(GET_COUNT_SQL, int.class);
+        return jdbcTemplate.queryForObject(GET_COUNT_SQL, new Object[]{category}, int.class);
     }
+
 }

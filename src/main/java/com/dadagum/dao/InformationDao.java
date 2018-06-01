@@ -2,6 +2,7 @@ package com.dadagum.dao;
 
 import com.dadagum.api.ActivityInfoDto;
 import com.dadagum.bean.ActivityInformation;
+import com.dadagum.bean.TeamRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -14,10 +15,17 @@ public class InformationDao {
 
     static final String ACT_TABLE_NAME = "activity_info";
 
+    static final String TEAM_TABLE_NAME = "team_info";
+
     private static final String ADD_ACTIVITY_SQL = "INSERT INTO " + ACT_TABLE_NAME + " VALUES(null, 2, ?, ?, ?, ?, ?)";
 
     private static final String GET_INFO_LIST_SQL = "SELECT org_name,introduction,name,start_time,end_time FROM " + ACT_TABLE_NAME + " NATURAL JOIN " + CategoryDao.TABLE_NAME + " WHERE category=?";
 
+    private static final String UPDATE_ACTIVITY_SQL = "UPDATE " + ACT_TABLE_NAME + " SET org_name = ?, introduction = ?, name = ?, start_time = ?, end_time = ? WHERE info_id = ?";
+
+    private static final String DELETE_ACTIVITY_SQL = "DELETE FROM " + ACT_TABLE_NAME + " WHERE info_id = ?";
+
+    private static final String ADD_TEAM_REQUEST_SQL = "INSERT INTO " + TEAM_TABLE_NAME + " VALUES(null, 1, ?, ?, ?)";
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -49,4 +57,15 @@ public class InformationDao {
         return result;
     }
 
+    public int updateActivity(ActivityInformation info){
+        return jdbcTemplate.update(UPDATE_ACTIVITY_SQL, info.getOrg_name(), info.getIntroduction(), info.getName(), info.getStart_time(), info.getEnd_time(), info.getInfo_id());
+    }
+
+    public int deleteActivity(int info_id){
+        return jdbcTemplate.update(DELETE_ACTIVITY_SQL, info_id);
+    }
+
+    public void addTeamRequest(TeamRequest request){
+        jdbcTemplate.update(ADD_TEAM_REQUEST_SQL, request.getTitle(), request.getIntroduction(), request.getUser_id());
+    }
 }

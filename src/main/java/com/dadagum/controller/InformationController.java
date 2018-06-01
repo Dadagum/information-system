@@ -3,10 +3,8 @@ package com.dadagum.controller;
 import com.dadagum.api.ActivityInfoDto;
 import com.dadagum.api.ReturnJson;
 import com.dadagum.bean.ActivityInformation;
-import com.dadagum.dao.CategoryDao;
-import com.dadagum.service.CategoryService;
+import com.dadagum.bean.TeamRequest;
 import com.dadagum.service.InformationService;
-import com.sun.xml.internal.bind.v2.TODO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -51,11 +48,11 @@ public class InformationController {
      * @param info
      * @return
      */
-    @RequestMapping(value = "/update/execution", method = RequestMethod.POST)
+    @RequestMapping(value = "/activity/update", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ReturnJson<ActivityInformation> updateActivityInfo(ActivityInformation info){
         System.out.println(info);
-        return new ReturnJson<>(info, "update successfully", true);
+        return informationService.updateActivityInfo(info) ? new ReturnJson<>(info, "update successfully", true) : new ReturnJson<>(null, "activity does not exist", false);
     }
 
     //TODO
@@ -64,22 +61,36 @@ public class InformationController {
      * @param infoId
      * @return
      */
-    @RequestMapping(value = "/deletion/execution", method = RequestMethod.POST)
+    @RequestMapping(value = "/activity/deletion", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ReturnJson<ActivityInformation> deleteActivityInfo(int infoId){
         System.out.println(infoId);
-        return new ReturnJson<>(null, "delete successfully", true);
+        return informationService.deleteActivity(infoId) ? new ReturnJson<>(null, "delete successfully", true) : new ReturnJson<>(null, "fail to delete for the activity does not exist", false);
     }
 
     /**
-     * view specific information list
+     * view specific category info list
      * @param category
      * @return
      */
-    @RequestMapping(value = "/{category}/view", method = RequestMethod.GET)
+    @RequestMapping(value = "/{category}/view", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public  ReturnJson<?> viewInfo(@PathVariable("category") String category){
         List<?> result = informationService.getSpecificCategoryInfo(category);
-        return result == null ? new ReturnJson<>(null, "no information was found", false) : new ReturnJson<>(result, "view successfully", true);
+        return result.size() == 0 ? new ReturnJson<>(null, "no information was found", false) : new ReturnJson<>(result, "view successfully", true);
+    }
+
+    /**
+     * add a team recruitment request
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/team/addition", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public ReturnJson<?> postTeamRequest(TeamRequest request){
+        request.setUser_id(1); //TODO : it should be from session .
+        System.out.println(request);
+        informationService.postTeamRequest(request);
+        return new ReturnJson<>(request, "successfully", true);
     }
 }

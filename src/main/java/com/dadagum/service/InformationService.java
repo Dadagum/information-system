@@ -1,6 +1,8 @@
 package com.dadagum.service;
 
 import com.dadagum.api.ActivityInfoDto;
+import com.dadagum.bean.ActivityInformation;
+import com.dadagum.bean.TeamRequest;
 import com.dadagum.dao.CategoryDao;
 import com.dadagum.dao.InformationDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +33,18 @@ public class InformationService {
      * @return
      */
     public List<?> getSpecificCategoryInfo(String category){
-        // check if category exists
-        if (categoryDao.getCountOfSpecificCategory(category) != 0){
-            return informationDao.getAllCategoryInfo(category);
-        }
-        return null;
+        return categoryDao.getCountOfSpecificCategory(category) == 0 ? null : informationDao.getAllCategoryInfo(category);
+    }
+
+    public boolean updateActivityInfo(ActivityInformation activityInformation){
+        return informationDao.updateActivity(activityInformation) != 0;
+    }
+
+    public boolean deleteActivity(int infoId){
+        return informationDao.deleteActivity(infoId) != 0;
+    }
+
+    public void postTeamRequest(TeamRequest request){
+        informationDao.addTeamRequest(request);
     }
 }
