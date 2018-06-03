@@ -1,7 +1,10 @@
 package com.dadagum.service;
 
+import com.dadagum.bean.User;
+import com.dadagum.dto.ActivityInfoDto;
 import com.dadagum.dto.UserDto;
 import com.dadagum.dao.UserDao;
+import com.dadagum.util.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,26 +18,37 @@ public class UserService {
 
     /**
      * add a user
-     * @param userDto
+     * @param user
      */
-    public void addUser(UserDto userDto){
-        userDao.insertUser(userDto);
+    public List<String> addUser(User user, String r_password){
+        List<String> msg = UserValidator.validateAllRegister(user, r_password);
+        if (msg == null){
+            userDao.insertUser(user);
+            return null;
+        }
+        return msg;
     }
 
     /**
      * check if username match password
-     * @param userDto
+     * @param user
      * @return true if match, false if not match
      */
-    public boolean checkIfUsernameMatchPassword(UserDto userDto){
-        return userDao.loginCheck(userDto) > 0;
+    public boolean checkIfUsernameMatchPassword(User user){
+        return userDao.loginCheck(user) > 0;
     }
 
-    public void update(UserDto userDto, int user_id){
-        userDao.update(userDto, user_id);
+    public boolean update(User user, int user_id){
+        if (user.getUser_id() != user_id) return false;
+        userDao.update(user);
+        return true;
     }
 
     public UserDto getPersonalInfo(int user_id){
         return userDao.getPersonalInfo(user_id);
+    }
+
+    public List<ActivityInfoDto> getFavorList(int user_id){
+        return userDao.getFavorList(user_id);
     }
 }

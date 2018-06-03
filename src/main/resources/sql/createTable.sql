@@ -31,12 +31,14 @@ CREATE TABLE info_type(
 CREATE TABLE activity_info(
     info_id INT PRIMARY KEY AUTO_INCREMENT,
     type_id INT ,
+    user_id INT,
     org_name VARCHAR(30) NOT NULL ,
     introduction TEXT NOT NULL ,
     name varchar(30) NOT NULL,
     start_time TIMESTAMP ,
     end_time TIMESTAMP,
-    FOREIGN KEY (type_id) REFERENCES info_type(type_id)
+    FOREIGN KEY (type_id) REFERENCES info_type(type_id),
+    FOREIGN KEY (user_id) REFERENCES user(user_id)
 )ENGINE=InnoDB
 
 # Team recruitment table

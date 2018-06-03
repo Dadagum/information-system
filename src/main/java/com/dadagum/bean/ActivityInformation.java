@@ -5,8 +5,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 public class ActivityInformation {
+
+    private int type_id;
     private int info_id;
     private String org_name;
+    private int user_id;
     private String introduction;
     private String name;
 
@@ -20,7 +23,16 @@ public class ActivityInformation {
         return info_id;
     }
 
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+
     public void setInfo_id(int info_id) {
+
         this.info_id = info_id;
     }
 
@@ -75,4 +87,13 @@ public class ActivityInformation {
                 ", end_time=" + end_time +
                 '}';
     }
+
+    public int getType_id() {
+        return type_id;
+    }
+
+    public void setType_id(int type_id) {
+        this.type_id = type_id;
+    }
+
 }

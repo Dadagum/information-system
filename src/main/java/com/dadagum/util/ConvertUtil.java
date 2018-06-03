@@ -6,6 +6,10 @@ import java.util.Date;
 
 public class ConvertUtil {
 
+    private ConvertUtil(){
+
+    }
+
     /**
      * convert a formatted string like "yyyy:MM:dd hh:mm:ss" to Date type
      * @param formatStr

@@ -1,18 +1,21 @@
 package com.dadagum.controller;
 
+import com.dadagum.bean.User;
+import com.dadagum.dto.ActivityInfoDto;
 import com.dadagum.dto.UserDto;
 import com.dadagum.dto.ReturnJson;
 import com.dadagum.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/user")
@@ -23,72 +26,62 @@ public class UserController {
 
     /**
      * user register
-     * @param userDto
+     * @param user
      * @return
      */
     @RequestMapping(value = "/registration", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ReturnJson<?> register(@Valid UserDto userDto, BindingResult bindingResult){
-        System.out.println(userDto);
-        if (bindingResult.hasErrors()){
-            System.out.println(bindingResult.getErrorCount());
-            return new ReturnJson<>(null, "check the information that you have typed", false);
+    public ReturnJson<?> register(User user, @RequestParam String r_password){
+        List<String> error = userService.addUser(user, r_password);
+        if (error != null){
+            Map<String, List<String>> result = new HashMap<>();
+            result.put("msg", error);
+            return new ReturnJson<>(result, "注册失败", false);
         }
-        userService.addUser(userDto);
-        userDto.setPassword(null);
-        return new ReturnJson<>(userDto, "create successfully", true);
+        return new ReturnJson<>(new UserDto(user), "注册成功", true);
     }
 
     /**
      * user login
-     * @param loginDto
-     * @param bindingResult
      * @return
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ReturnJson<?> login(@Valid UserDto loginDto, BindingResult bindingResult){
-        if (bindingResult.hasErrors()){
-            System.out.println(bindingResult.getErrorCount());
-            return new ReturnJson<>(null, "check your username and password", false);
-        }
-        System.out.println(loginDto);
-        return new ReturnJson<>(loginDto, "login successfully", true);
+    public ReturnJson<?> login(User user){
+        return userService.checkIfUsernameMatchPassword(user) ? new ReturnJson<>(null, "登陆成功", true) : new ReturnJson<>(null, "用户名不存在或者密码错误", false);
     }
 
     /**
      * update personal profile
-     * @param userDto
-     * @param bindingResult
+     * @param user
      * @return
      */
     @RequestMapping(value = "/profile/update", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ReturnJson<?> update(@Valid UserDto userDto, BindingResult bindingResult){
-        System.out.println(userDto);
-        if(bindingResult.hasErrors() ){
-            List<FieldError> list = bindingResult.getFieldErrors();
-            for (FieldError fieldError : list) System.out.println(fieldError.getField());
-            return new ReturnJson<>(null, "fail to update", false);
-        }
-        // default user
-        int user_id = 1; // TODO
-        userService.update(userDto, user_id);
-        userDto.setPassword(null);
-        return new ReturnJson<>(userDto, "update person information successfully", true);
+    public ReturnJson<?> update(User user, HttpSession session){
+        User s_user = (User) session.getAttribute("user");
+        if(s_user == null) return new ReturnJson<>(null, "请先登陆", false);
+        return userService.update(user, s_user.getUser_id()) ? new ReturnJson<>(new UserDto(user), "更新成功", true) : new ReturnJson<>(null, "您无权更新他人信息", false);
     }
 
     /**
      * get personal profile info
      * @return
      */
-    @RequestMapping(value = "/profile", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/profile", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ReturnJson<?> getPersonalInfo(){
-        // default user
-        int user_id = 1; // TODO
+    public ReturnJson<?> getPersonalInfo(@RequestParam int user_id){
         UserDto result = userService.getPersonalInfo(user_id);
-        return new ReturnJson<>(result, "successfully", true);
+        return new ReturnJson<>(result, "成功", true);
+    }
+
+    @RequestMapping(value = "/favor", method = RequestMethod.POST, produces = "application.json")
+    @ResponseBody
+    public ReturnJson<?> getFavorList(@RequestParam int user_id, HttpSession session){
+        User user = (User) session.getAttribute("user");
+        if (user == null || user.getUser_id() != user_id) return new ReturnJson<>(null, "请先登陆", false);
+        List<ActivityInfoDto> result = userService.getFavorList(user_id);
+        return new ReturnJson<>(result, "成功", true);
     }
 
 }

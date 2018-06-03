@@ -4,9 +4,12 @@ import com.dadagum.bean.ActivityInformation;
 import com.dadagum.dao.ActivityDao;
 import com.dadagum.dao.InfoRequestDao;
 import com.dadagum.dao.UserDao;
+import com.dadagum.dto.ActivityInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class ActivityService {
@@ -34,12 +37,26 @@ public class ActivityService {
         return false;
     }
 
-    public boolean updateActivityInfo(ActivityInformation activityInformation){
-        return activityDao.updateActivity(activityInformation) != 0;
+    // TODO
+    public boolean updateActivity(ActivityInformation activity, int user_id){
+        activity.setUser_id(user_id);
+        return userDao.getPriority(user_id).equals("org") && activityDao.updateActivity(activity) == 1;
+    }
+
+    public List<ActivityInfoDto> getPassInfoList(){
+        return activityDao.getPassInfoList();
+    }
+
+    public ActivityInfoDto getSpecificInfo(int info_id){
+        return activityDao.getSpecificInfo(info_id);
     }
 
     public boolean deleteActivity(int infoId){
         return activityDao.deleteActivity(infoId) != 0;
     }
 
+    // TODO
+    public boolean addFavorActivity(int user_id, int info_id){
+        return false;
+    }
 }

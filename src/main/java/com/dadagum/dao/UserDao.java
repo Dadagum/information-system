@@ -1,16 +1,21 @@
 package com.dadagum.dao;
 
+import com.dadagum.bean.User;
+import com.dadagum.dto.ActivityInfoDto;
 import com.dadagum.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public class UserDao {
 
     static final String USER_TABLE = "user";
+
+    static final String FAVOR_TABLE = "favor";
 
     static final String PRIORITY_TABLE = "priority";
 
@@ -24,6 +29,8 @@ public class UserDao {
 
     private static final String GET_USER_PRIORITY = "SELECT identity from " + PRIORITY_TABLE + " WHERE uid = ?";
 
+    private static final String GET_FAVOR_LIST = "SELECT org_name, introduction, name, start_time, end_time FROM " + FAVOR_TABLE + " NATURAL JOIN " + ActivityDao.ACTIVITY_TABLE + " WHERE user_id = ?";
+
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -33,23 +40,23 @@ public class UserDao {
 
     /**
      * add a user into database
-     * @param userDto
+     * @param user
      */
-    public void insertUser(UserDto userDto){
-        jdbcTemplate.update(INSERT_USER, userDto.getUsername(), userDto.getEmail(), userDto.getPassword());
+    public void insertUser(User user){
+        jdbcTemplate.update(INSERT_USER, user.getUsername(), user.getEmail(), user.getPassword());
     }
 
     /**
      * check if username match password when checking in
-     * @param userDto
+     * @param user
      * @return 0 if not match or not exist, 1 if match
      */
-    public int loginCheck(UserDto userDto){
-        return jdbcTemplate.queryForObject(HAS_USER, new Object[]{userDto.getUsername(), userDto.getPassword()}, int.class);
+    public int loginCheck(User user){
+        return jdbcTemplate.queryForObject(HAS_USER, new Object[]{user.getUsername(), user.getPassword()}, int.class);
     }
 
-    public void update(UserDto userDto, int user_id){
-        jdbcTemplate.update(UPDATE_PERSONAL_INFO, userDto.getPassword(), user_id);
+    public void update(User user){
+        jdbcTemplate.update(UPDATE_PERSONAL_INFO, user.getPassword(), user);
     }
 
     public UserDto getPersonalInfo(int user_id){
@@ -63,5 +70,21 @@ public class UserDao {
 
     public String getPriority(int user_id){
         return jdbcTemplate.queryForObject(GET_USER_PRIORITY, new Object[]{user_id}, String.class);
+    }
+
+    public List<ActivityInfoDto> getFavorList(int user_id){
+        List<ActivityInfoDto> result = new ArrayList<>();
+        jdbcTemplate.query(GET_FAVOR_LIST, new Object[]{user_id}, resultSet -> {
+            ActivityInfoDto tmp = new ActivityInfoDto();
+            tmp.setOrg_name(resultSet.getString("org_name"));
+            tmp.setIntroduction(resultSet.getString("introduction"));
+            tmp.setName(resultSet.getString("name"));
+            tmp.setStart_time(resultSet.getString("start_time"));
+            tmp.setEnd_time(resultSet.getString("end_time"));
+            tmp.setInfo_id(resultSet.getInt("info_id"));
+            tmp.setType_id(resultSet.getInt("type_id"));
+            result.add(tmp);
+        });
+        return result;
     }
 }
