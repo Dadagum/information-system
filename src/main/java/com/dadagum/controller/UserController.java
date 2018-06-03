@@ -15,8 +15,8 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-@RequestMapping("/account")
-public class AccountController {
+@RequestMapping("/user")
+public class UserController {
 
     @Autowired
     private UserService userService;
@@ -56,6 +56,12 @@ public class AccountController {
         return new ReturnJson<>(loginDto, "login successfully", true);
     }
 
+    /**
+     * update personal profile
+     * @param userDto
+     * @param bindingResult
+     * @return
+     */
     @RequestMapping(value = "/profile/update", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ReturnJson<?> update(@Valid UserDto userDto, BindingResult bindingResult){
@@ -72,6 +78,10 @@ public class AccountController {
         return new ReturnJson<>(userDto, "update person information successfully", true);
     }
 
+    /**
+     * get personal profile info
+     * @return
+     */
     @RequestMapping(value = "/profile", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public ReturnJson<?> getPersonalInfo(){

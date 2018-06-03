@@ -32,10 +32,10 @@ public class ActivityDao {
 
     /**
      * add a activity
-     * @param activityInfoDto
+     * @param activity
      */
-    public void addActivity(ActivityInfoDto activityInfoDto){
-        jdbcTemplate.update(ADD_ACTIVITY_SQL, activityInfoDto.getOrg_name(), activityInfoDto.getIntroduction(), activityInfoDto.getName(), activityInfoDto.getStart_time(), activityInfoDto.getEnd_time());
+    public void addActivity(ActivityInformation activity){
+        jdbcTemplate.update(ADD_ACTIVITY_SQL, activity.getOrg_name(), activity.getIntroduction(), activity.getName(), activity.getStart_time(), activity.getEnd_time());
     }
 
 }

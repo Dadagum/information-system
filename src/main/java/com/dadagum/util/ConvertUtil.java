@@ -17,4 +17,14 @@ public class ConvertUtil {
         simpleDateFormat.setLenient(false);
         return simpleDateFormat.parse(formatStr);
     }
+
+    /**
+     * convert a Date type date to formatted string like "yyyy:MM:dd hh:mm:ss"
+     * @param date
+     * @return
+     */
+    public static String DateToString(Date date){
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+        return sf.format(date);
+    }
 }

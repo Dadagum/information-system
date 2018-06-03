@@ -63,3 +63,22 @@ CREATE TABLE comment(
     comment TEXT NOT NULL ,
     FOREIGN KEY (user_id) REFERENCES user(user_id)
 )ENGINE=INNODB
+
+# info_addition_request table
+
+CREATE TABLE info_addition_request (
+    info_id INT ,
+    type_id INT ,
+    status ENUM('pass', 'waiting', 'rejected' ) NOT NULL,
+    FOREIGN KEY (type_id) REFERENCES info_type(type_id)
+)ENGINE=INNODB
+
+# favor table
+CREATE TABLE favor(
+    user_id INT ,
+    type_id INT ,
+    info_id INT ,
+    FOREIGN KEY (user_id) REFERENCES user(user_id),
+    FOREIGN KEY (type_id) REFERENCES info_type(type_id)
+)ENGINE=INNODB
+

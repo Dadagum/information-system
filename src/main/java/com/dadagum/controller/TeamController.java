@@ -21,7 +21,7 @@ public class TeamController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/team/addition", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/addition", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ReturnJson<?> postTeamRequest(TeamRequest request){
         request.setUser_id(1); //TODO : it should be from session .

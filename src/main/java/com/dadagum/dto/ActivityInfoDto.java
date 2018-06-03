@@ -1,27 +1,15 @@
 package com.dadagum.dto;
 
-import org.hibernate.validator.constraints.Length;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.util.Date;
-
+import com.dadagum.bean.ActivityInformation;
+import com.dadagum.util.ConvertUtil;
 
 public class ActivityInfoDto {
 
-    @Length(min = 3, max = 30)
     private String org_name;
-
-    @Length(min = 3, max = 1000)
     private String introduction;
-
-    @Length(min = 3, max = 30)
     private String name;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-    private Date start_time;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-    private Date end_time;
+    private String start_time;
+    private String end_time;
 
     @Override
     public String toString() {
@@ -32,6 +20,18 @@ public class ActivityInfoDto {
                 ", start_time=" + start_time +
                 ", end_time=" + end_time +
                 '}';
+    }
+
+    public ActivityInfoDto(){
+
+    }
+
+    public ActivityInfoDto(ActivityInformation activityInformation){
+        org_name = activityInformation.getOrg_name();
+        introduction = activityInformation.getIntroduction();
+        name = activityInformation.getName();
+        start_time = ConvertUtil.DateToString(activityInformation.getStart_time());
+        end_time = ConvertUtil.DateToString(activityInformation.getEnd_time());
     }
 
     public String getOrg_name() {
@@ -58,19 +58,19 @@ public class ActivityInfoDto {
         this.name = name;
     }
 
-    public Date getStart_time() {
+    public String getStart_time() {
         return start_time;
     }
 
-    public void setStart_time(Date start_time) {
+    public void setStart_time(String start_time) {
         this.start_time = start_time;
     }
 
-    public Date getEnd_time() {
+    public String getEnd_time() {
         return end_time;
     }
 
-    public void setEnd_time(Date end_time) {
+    public void setEnd_time(String end_time) {
         this.end_time = end_time;
     }
 }
