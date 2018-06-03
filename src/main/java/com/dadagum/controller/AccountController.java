@@ -15,6 +15,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Controller
+@RequestMapping("/account")
 public class AccountController {
 
     @Autowired
@@ -44,7 +45,7 @@ public class AccountController {
      * @param bindingResult
      * @return
      */
-    @RequestMapping(value = "/login/execution", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ReturnJson<?> login(@Valid UserDto loginDto, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
@@ -55,7 +56,7 @@ public class AccountController {
         return new ReturnJson<>(loginDto, "login successfully", true);
     }
 
-    @RequestMapping(value = "/personal/profile/update", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/profile/update", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ReturnJson<?> update(@Valid UserDto userDto, BindingResult bindingResult){
         System.out.println(userDto);
@@ -71,7 +72,7 @@ public class AccountController {
         return new ReturnJson<>(userDto, "update person information successfully", true);
     }
 
-    @RequestMapping(value = "/personal/profile", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/profile", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public ReturnJson<?> getPersonalInfo(){
         // default user
