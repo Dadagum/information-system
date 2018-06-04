@@ -20,7 +20,7 @@ public class CommentDao {
 
     private static final String DELETE_COMMENT_SQL = "DELETE FROM " + COM_TABLE_NAME + " WHERE comment_id =?";
 
-    private static final String GET_COMMENT_LIST = "SELECT username, type_id, info_id, parent_id, comment, create_time FROM " + COM_TABLE_NAME + " NATURAL JOIN " + UserDao.USER_TABLE_NAME + " WHERE type_id = ? AND info_id = ?";
+    private static final String GET_COMMENT_LIST = "SELECT username, type_id, info_id, parent_id, comment, create_time FROM " + COM_TABLE_NAME + " NATURAL JOIN " + UserDao.USER_TABLE + " WHERE type_id = ? AND info_id = ?";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -29,8 +29,8 @@ public class CommentDao {
         return jdbcTemplate.queryForObject(GET_COUNT_BY_ID, new Object[]{comment_id}, int.class) == 1;
     }
 
-    public void addComment(Comment comment, int user_id){
-        jdbcTemplate.update(INSERT_COMMENT_SQL, user_id, comment.getType_id(), comment.getInfo_id(), comment.getParent_id(), comment.getComment(), comment.getCreate_time());
+    public void addComment(Comment comment){
+        jdbcTemplate.update(INSERT_COMMENT_SQL, comment.getUser_id(), comment.getType_id(), comment.getInfo_id(), comment.getParent_id(), comment.getComment(), comment.getCreate_time());
     }
 
     public boolean deleteComment(int comment_id){

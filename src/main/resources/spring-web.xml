@@ -12,8 +12,13 @@
     <!-- intercepter -->
     <mvc:interceptors>
         <mvc:interceptor>
-            <mvc:mapping path="/information/**" />
+            <mvc:mapping path="/**" />
             <bean class="com.dadagum.interceptor.CharacterEncodingInterceptor"/>
+        </mvc:interceptor>
+
+        <mvc:interceptor>
+            <mvc:mapping path="/administration/**"/>
+            <bean class="com.dadagum.interceptor.CheckPriorityInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 

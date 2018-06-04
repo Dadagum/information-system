@@ -27,6 +27,7 @@ public class CategoryDao {
         jdbcTemplate.update(INSERT_TYPE_SQL, category.getName());
     }
 
+    //
     public boolean hasCategory(String category){
         return jdbcTemplate.queryForObject(GET_COUNT_BY_NAME_SQL, new Object[]{category}, int.class) == 1;
     }

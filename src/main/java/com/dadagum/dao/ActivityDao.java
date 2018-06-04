@@ -24,6 +24,10 @@ public class ActivityDao {
 
     private static final String GET_SINGLE_INFO = "SELECT org_name, introduction, name, start_time, end_time FROM " + ACTIVITY_TABLE + " NATURAL JOIN " + InfoRequestDao.INFO_REQUEST_TABLE + " WHERE status = 'pass' AND info_id = ?";
 
+    private static final String ADD_FAVOR = "INSERT INTO " + UserDao.FAVOR_TABLE + " VALUES(?, 2, ?)";
+
+    private static final String GET_COUNT_BY_INFOID = "SELECT count(*) FROM " + ACTIVITY_TABLE + " WHERE info_id = ?";
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -71,6 +75,14 @@ public class ActivityDao {
      */
     public void addActivity(ActivityInformation activity){
         jdbcTemplate.update(ADD_ACTIVITY, activity.getOrg_name(), activity.getIntroduction(), activity.getName(), activity.getStart_time(), activity.getEnd_time(), activity.getUser_id());
+    }
+
+    public int addFavor(int user_id, int info_id){
+        return jdbcTemplate.update(ADD_FAVOR, user_id, info_id);
+    }
+
+    public int getCountByInfoId(int info_id){
+        return jdbcTemplate.queryForObject(GET_COUNT_BY_INFOID, new Object[]{info_id}, int.class);
     }
 
 }

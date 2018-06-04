@@ -12,11 +12,11 @@ public class Comment {
     private int comment_id;
     private int parent_id;
 
-    @DateTimeFormat(pattern = "yyyy:MM:dd hh:mm:ss")
+    @DateTimeFormat(pattern = "yyyy:MM:dd HH:mm:ss")
     private Date create_time;
 
     @Length(min = 5, max = 500)
-    private Date comment;
+    private String comment;
 
     public int getUser_id() {
         return user_id;
@@ -66,11 +66,11 @@ public class Comment {
         this.create_time = create_time;
     }
 
-    public Date getComment() {
+    public String getComment() {
         return comment;
     }
 
-    public void setComment(Date comment) {
+    public void setComment(String comment) {
         this.comment = comment;
     }
 }

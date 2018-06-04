@@ -2,12 +2,11 @@ package com.dadagum.controller;
 
 import com.dadagum.dto.ReturnJson;
 import com.dadagum.service.ActivityService;
+import com.dadagum.service.AdminService;
+import com.dadagum.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/administration")
@@ -16,17 +15,21 @@ public class AdminController {
     @Autowired
     private ActivityService activityService;
 
-    //TODO
+    @Autowired
+    private AdminService adminService;
+
+    @Autowired
+    private CommentService commentService;
     /**
      * delete an activity
      * @param info_id
      * @return
      */
-    @RequestMapping(value = "/deletion/{info_id}", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/deletion", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ReturnJson<?> deleteActivityInfo(@PathVariable int info_id){
+    public ReturnJson<?> deleteActivityInfo(@RequestParam int info_id){
         System.out.println(info_id);
-        return activityService.deleteActivity(info_id) ? new ReturnJson<>(null, "delete successfully", true) : new ReturnJson<>(null, "fail to delete for the activity does not exist", false);
+        return info_id > 0 && activityService.deleteActivity(info_id) ? new ReturnJson<>(null, "成功删除活动", true) : new ReturnJson<>(null, "活动不存在，删除失败", false);
     }
 
     /**
@@ -35,15 +38,27 @@ public class AdminController {
      * @param info_id
      * @return
      */
-    @RequestMapping(value = "/accept/{type_id}/{info_id}", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/accept", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ReturnJson<?> passActicityRequest(@PathVariable int type_id, @PathVariable int info_id){
-        return null;
+    public ReturnJson<?> passActivityRequest(@RequestParam int type_id, @RequestParam int info_id){
+        return adminService.passActivity(type_id, info_id) ? new ReturnJson<>(null, "活动成功通过审核", true) : new ReturnJson<>(null, "活动不存在，审核失败", false);
     }
 
-    @RequestMapping(value = "/rejection/{type_id}/{info_id}", method = RequestMethod.POST, produces = "application/json")
+    /**
+     * deny a activity request
+     * @param type_id
+     * @param info_id
+     * @return
+     */
+    @RequestMapping(value = "/rejection", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ReturnJson<?> denyActivityRequest(@PathVariable int type_id, @PathVariable int info_id){
-        return null;
+    public ReturnJson<?> denyActivityRequest(@RequestParam int type_id, @RequestParam int info_id){
+        return adminService.denyActivity(type_id, info_id) ? new ReturnJson<>(null, "活动已被成功拒绝", true) : new ReturnJson<>(null, "活动不存在，拒绝失败", false);
+    }
+
+    @RequestMapping(value = "/comment/deletion", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public ReturnJson<?> deleteComment(@RequestParam int comment_id){
+        return commentService.deleteComment(comment_id) ? new ReturnJson<>(null, "成功删除评论", true) : new ReturnJson<>(null, "删除评论失败", false);
     }
 }

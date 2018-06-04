@@ -1,6 +1,7 @@
 package com.dadagum.dto;
 
 import com.dadagum.bean.Comment;
+import com.dadagum.util.ConvertUtil;
 
 public class CommentDto {
     private String username;
@@ -11,7 +12,11 @@ public class CommentDto {
     private String create_time;
 
     public CommentDto(Comment comment){
-
+        type_id = comment.getType_id();
+        info_id = comment.getInfo_id();
+        parent_id = comment.getParent_id();
+        this.comment = comment.getComment();
+        create_time = ConvertUtil.DateToString(comment.getCreate_time());
     }
 
     public CommentDto(){

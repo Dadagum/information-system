@@ -15,8 +15,8 @@ CREATE TABLE user(
 
 CREATE TABLE priority(
     identity ENUM('admin', 'root', 'org' ) NOT NULL ,
-    uid INT,
-    FOREIGN KEY (uid) REFERENCES user(user_id)
+    user_id INT,
+    FOREIGN KEY (user_id) REFERENCES user(user_id)
 )ENGINE=InnoDB
 
 # information type table

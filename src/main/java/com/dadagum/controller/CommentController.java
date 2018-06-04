@@ -1,6 +1,7 @@
 package com.dadagum.controller;
 
 import com.dadagum.bean.Comment;
+import com.dadagum.bean.User;
 import com.dadagum.dto.CommentDto;
 import com.dadagum.dto.ReturnJson;
 import com.dadagum.service.CommentService;
@@ -8,11 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -29,45 +28,47 @@ public class CommentController {
      * @param bindingResult
      * @return
      */
-    @RequestMapping(value = "/execution", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/production", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ReturnJson<?> makeComment(@Valid Comment comment, BindingResult bindingResult){
+    public ReturnJson<?> makeComment(@Valid Comment comment, BindingResult bindingResult, HttpSession session){
         System.out.println(comment);
         if (bindingResult.hasErrors()){
             List<FieldError> list = bindingResult.getFieldErrors();
             for (FieldError fieldError : list) System.out.println(fieldError.getField());
-            return new ReturnJson<>(null, "fail to make comment, check the information please", false);
+            return new ReturnJson<>(null, "传来的参数格式有错误", false);
         }
-        // use default user
-        int user_id = 1; //TODO
-        return commentService.makeComment(comment, user_id) ? new ReturnJson<>(comment, "comment successfully", true) : new ReturnJson<>(null, "fail to make comment", false);
+        User user = (User) session.getAttribute("user");
+        if (user == null) return new ReturnJson<>(null, "请先登陆", false);
+        comment.setUser_id(user.getUser_id());
+        List<String> result = commentService.makeComment(comment);
+        return result == null ? new ReturnJson<>(new CommentDto(comment), "评论成功", true) : new ReturnJson<>(null, "评论失败", false);
     }
 
     /**
-     * delete a comment
+     * delete a comment for normal user
      * @param comment_id
      * @return
      */
-    @RequestMapping(value = "/{comment_id}/deletion", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/deletion", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ReturnJson<?> deleteComment(@PathVariable int comment_id){
+    public ReturnJson<?> deleteComment(@RequestParam int comment_id, HttpSession session){
         System.out.println(comment_id);
-        // use default user
-        int session_id = 1; // TODO
-        return commentService.deleteComment(comment_id, session_id) ? new ReturnJson<>(null, "delete successfully", true) : new ReturnJson<>(null, "fail to delete", false);
+        User user = (User) session.getAttribute("user");
+        int session_id = user.getUser_id();
+        return commentService.deleteComment(comment_id, session_id) ? new ReturnJson<>(null, "成功删除评论", true) : new ReturnJson<>(null, "删除评论失败", false);
     }
 
     /**
-     * view specific information
-     * @param category
+     * view specific comment
+     * @param type_id
      * @param info_id
      * @return
      */
-    @RequestMapping(value = "/{category}/{info_id}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/infoList", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ReturnJson<?> viewSpecificComment(@PathVariable String category, @PathVariable int info_id){
-        System.out.println(category + " " + info_id);
-        List<CommentDto> result = commentService.getSpecificComment(category, info_id);
-        return result == null ? new ReturnJson<>(null, "information does not exist", false) : new ReturnJson<>(result, "successfully", true);
+    public ReturnJson<?> viewSpecificComment(@RequestParam int type_id, @RequestParam int info_id){
+        System.out.println(type_id + " " + info_id);
+        List<CommentDto> result = commentService.getSpecificComment(type_id, info_id);
+        return result == null ? new ReturnJson<>(null, "信息不存在，无法查看评论", false) : new ReturnJson<>(result, "查看评论成功", true);
     }
 }

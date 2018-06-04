@@ -4,9 +4,10 @@ import com.dadagum.bean.User;
 import com.dadagum.dto.ActivityInfoDto;
 import com.dadagum.dto.UserDto;
 import com.dadagum.dao.UserDao;
-import com.dadagum.util.UserValidator;
+import com.dadagum.util.DateValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,27 +22,26 @@ public class UserService {
      * @param user
      */
     public List<String> addUser(User user, String r_password){
-        List<String> msg = UserValidator.validateAllRegister(user, r_password);
-        if (msg == null){
+        List<String> msg = DateValidator.validateAllRegister(user, r_password);
+        if (msg == null || !userDao.hasUser(user)){
             userDao.insertUser(user);
             return null;
         }
+        // default a normal user so there is no need to insert priority table
         return msg;
     }
 
     /**
-     * check if username match password
+     * login check
      * @param user
-     * @return true if match, false if not match
+     * @return user_id if the user exists
      */
-    public boolean checkIfUsernameMatchPassword(User user){
-        return userDao.loginCheck(user) > 0;
+    public int loginCheck(User user){
+        return userDao.isPwdMatchName(user) ? userDao.getUserId(user) : 0;
     }
 
-    public boolean update(User user, int user_id){
-        if (user.getUser_id() != user_id) return false;
-        userDao.update(user);
-        return true;
+    public boolean update(User user){
+        return userDao.update(user) == 1;
     }
 
     public UserDto getPersonalInfo(int user_id){
@@ -51,4 +51,14 @@ public class UserService {
     public List<ActivityInfoDto> getFavorList(int user_id){
         return userDao.getFavorList(user_id);
     }
+
+    public String getUserPriority(int user_id){
+        if (userDao.isNormalUser(user_id)) return null;
+        return userDao.getPriority(user_id);
+    }
+
+    public User getUser(String username){
+        return userDao.getUserByName(username);
+    }
+
 }

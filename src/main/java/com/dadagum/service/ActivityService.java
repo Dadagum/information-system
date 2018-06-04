@@ -37,7 +37,6 @@ public class ActivityService {
         return false;
     }
 
-    // TODO
     public boolean updateActivity(ActivityInformation activity, int user_id){
         activity.setUser_id(user_id);
         return userDao.getPriority(user_id).equals("org") && activityDao.updateActivity(activity) == 1;
@@ -55,8 +54,12 @@ public class ActivityService {
         return activityDao.deleteActivity(infoId) != 0;
     }
 
-    // TODO
     public boolean addFavorActivity(int user_id, int info_id){
+        // check if activity exists
+        if (activityDao.getCountByInfoId(info_id) != 0){
+            activityDao.addFavor(user_id, info_id);
+            return true;
+        }
         return false;
     }
 }

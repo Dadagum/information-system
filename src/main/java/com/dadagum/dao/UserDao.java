@@ -21,7 +21,7 @@ public class UserDao {
 
     private static final String INSERT_USER = "INSERT INTO " + USER_TABLE + " VALUES(null,?,?,?)";
 
-    private static final String HAS_USER = "SELECT count(*) FROM " + USER_TABLE + "WHERE username=? AND password=?";
+    private static final String GET_ID_BY_NAME_AND_PWD = "SELECT user_id FROM " + USER_TABLE + " WHERE username=? AND password=?";
 
     private static final String UPDATE_PERSONAL_INFO = "UPDATE " + USER_TABLE + " SET password = ? WHERE user_id = ?";
 
@@ -30,6 +30,14 @@ public class UserDao {
     private static final String GET_USER_PRIORITY = "SELECT identity from " + PRIORITY_TABLE + " WHERE uid = ?";
 
     private static final String GET_FAVOR_LIST = "SELECT org_name, introduction, name, start_time, end_time FROM " + FAVOR_TABLE + " NATURAL JOIN " + ActivityDao.ACTIVITY_TABLE + " WHERE user_id = ?";
+
+    private static final String HAS_USER_REGISTER = "SELECT count(*) FROM " + USER_TABLE + " WHERE username = ? OR email = ?";
+
+    private static final String IS_NORMAL_USER = "SELECT count(*) FROM " + PRIORITY_TABLE + " WHERE user_id = ?";
+
+    private static final String IS_MATCH_PWD_NAMD = "SELECT count(*) FROM " + USER_TABLE + " WHERE username = ? AND password=?";
+
+    private static final String GET_USER_BY_NAME = "SELECT * FROM " + USER_TABLE + " WHERE username = ?";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -46,17 +54,8 @@ public class UserDao {
         jdbcTemplate.update(INSERT_USER, user.getUsername(), user.getEmail(), user.getPassword());
     }
 
-    /**
-     * check if username match password when checking in
-     * @param user
-     * @return 0 if not match or not exist, 1 if match
-     */
-    public int loginCheck(User user){
-        return jdbcTemplate.queryForObject(HAS_USER, new Object[]{user.getUsername(), user.getPassword()}, int.class);
-    }
-
-    public void update(User user){
-        jdbcTemplate.update(UPDATE_PERSONAL_INFO, user.getPassword(), user);
+    public int update(User user){
+        return jdbcTemplate.update(UPDATE_PERSONAL_INFO, user.getPassword(), user.getUser_id());
     }
 
     public UserDto getPersonalInfo(int user_id){
@@ -87,4 +86,32 @@ public class UserDao {
         });
         return result;
     }
+
+    public boolean hasUser(User user){
+        return jdbcTemplate.queryForObject(HAS_USER_REGISTER, new Object[]{user.getUsername(), user.getEmail()}, int.class) == 1;
+    }
+
+    public boolean isPwdMatchName(User user){
+        return jdbcTemplate.queryForObject(IS_MATCH_PWD_NAMD, new Object[]{user.getUsername(), user.getPassword()}, int.class) == 1;
+    }
+
+    public boolean isNormalUser(int user_id){
+        return jdbcTemplate.queryForObject(IS_NORMAL_USER, new Object[]{user_id}, int.class) == 0;
+    }
+
+    public int getUserId(User user){
+        return jdbcTemplate.queryForObject(GET_ID_BY_NAME_AND_PWD, new Object[]{user.getUsername(), user.getPassword()}, int.class);
+    }
+
+    public User getUserByName(String username){
+        User user = new User();
+        jdbcTemplate.query(GET_USER_BY_NAME, new Object[]{username}, resultSet -> {
+            user.setUser_id(resultSet.getInt("user_id"));
+            user.setUsername(resultSet.getString("username"));
+            user.setPassword(resultSet.getString("password"));
+            user.setEmail(resultSet.getString("email"));
+        });
+        return user;
+    }
+
 }
