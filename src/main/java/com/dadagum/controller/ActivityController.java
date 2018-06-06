@@ -27,7 +27,7 @@ public class ActivityController {
      * @param
      * @return
      */
-    @RequestMapping(value = "/addition", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/info", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ReturnJson<?> addActivityInfo(@Valid ActivityInformation activity, BindingResult bindingResult, HttpSession session){
         System.out.println(activity);
@@ -51,7 +51,7 @@ public class ActivityController {
      * get pass activity information list
      * @return
      */
-    @RequestMapping(value = "/list", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public ReturnJson<?> getList(){
         List<ActivityInfoDto> result = activityService.getPassInfoList();
@@ -63,9 +63,9 @@ public class ActivityController {
      * @param info_id
      * @return
      */
-    @RequestMapping(value = "/specific", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/info/{info_id}", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public ReturnJson<?> getSpecificInfo(@RequestParam int info_id){
+    public ReturnJson<?> getSpecificInfo(@PathVariable int info_id){
         ActivityInfoDto result = activityService.getSpecificInfo(info_id);
         return new ReturnJson<>(result, "成功", true);
     }
@@ -76,7 +76,7 @@ public class ActivityController {
      * @param bindingResult
      * @return
      */
-    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/info", method = RequestMethod.PATCH, produces = "application/json")
     @ResponseBody
     public ReturnJson<?> updateActivityInfo(@Valid ActivityInformation activity, BindingResult bindingResult, HttpSession session){
         System.out.println(activity);
@@ -97,17 +97,16 @@ public class ActivityController {
 
     /**
      * add a specific activity to favorite list
-     * @param user_id
      * @param info_id
      * @param session
      * @return
      */
-    @RequestMapping(value = "/favor/addition", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/favor", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ReturnJson<?> addFavorActivity(@RequestParam int user_id, @RequestParam int info_id, HttpSession session){
+    public ReturnJson<?> addFavorActivity(@RequestParam int info_id, HttpSession session){
         User user = (User) session.getAttribute("user");
-        if (user == null || user.getUser_id() != user_id) return new ReturnJson<>(null, "请先登陆", false);
-        return activityService.addFavorActivity(user_id, info_id) ? new ReturnJson<>(null, "关注成功！", true) : new ReturnJson<>(null, "活动不存在", false);
+        if (user == null) return new ReturnJson<>(null, "请先登陆", false);
+        return activityService.addFavorActivity(user.getUser_id(), info_id) ? new ReturnJson<>(null, "关注成功！", true) : new ReturnJson<>(null, "活动不存在", false);
     }
 
 }

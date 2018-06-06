@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -74,7 +71,7 @@ public class UserController {
      * @param user
      * @return
      */
-    @RequestMapping(value = "/profile/update", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/profile", method = RequestMethod.PATCH, produces = "application/json")
     @ResponseBody
     public ReturnJson<?> update(@Valid User user, BindingResult bindingResult, HttpSession session){
         if (bindingResult.hasErrors()) return new ReturnJson<>(null, "请检查你填写的信息", false);
@@ -86,23 +83,23 @@ public class UserController {
         return userService.update(user) ? new ReturnJson<>(new UserDto(user), "更新成功", true) : new ReturnJson<>(null, "您无权更新他人信息", false);
     }
 
-    /**
+    /**TODO
      * get personal profile info
      * @return
      */
-    @RequestMapping(value = "/profile", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/profile/{user_id}", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public ReturnJson<?> getPersonalInfo(@RequestParam int user_id){
+    public ReturnJson<?> getPersonalInfo(@PathVariable int user_id){
         UserDto result = userService.getPersonalInfo(user_id);
         return new ReturnJson<>(result, "成功", true);
     }
 
     @RequestMapping(value = "/favor", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public ReturnJson<?> getFavorList(@RequestParam int user_id, HttpSession session){
+    public ReturnJson<?> getFavorList( HttpSession session){
         User user = (User) session.getAttribute("user");
-        if (user == null || user.getUser_id() != user_id) return new ReturnJson<>(null, "请先登陆", false);
-        List<ActivityInfoDto> result = userService.getFavorList(user_id);
+        if (user == null ) return new ReturnJson<>(null, "请先登陆", false);
+        List<ActivityInfoDto> result = userService.getFavorList(user.getUser_id());
         return new ReturnJson<>(result, "成功", true);
     }
 

@@ -25,9 +25,9 @@ public class AdminController {
      * @param info_id
      * @return
      */
-    @RequestMapping(value = "/deletion", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/activity/{info_id}", method = RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
-    public ReturnJson<?> deleteActivityInfo(@RequestParam int info_id){
+    public ReturnJson<?> deleteActivityInfo(@PathVariable int info_id){
         System.out.println(info_id);
         return info_id > 0 && activityService.deleteActivity(info_id) ? new ReturnJson<>(null, "成功删除活动", true) : new ReturnJson<>(null, "活动不存在，删除失败", false);
     }
@@ -38,7 +38,7 @@ public class AdminController {
      * @param info_id
      * @return
      */
-    @RequestMapping(value = "/accept", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/activity/acceptance", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ReturnJson<?> passActivityRequest(@RequestParam int type_id, @RequestParam int info_id){
         return adminService.passActivity(type_id, info_id) ? new ReturnJson<>(null, "活动成功通过审核", true) : new ReturnJson<>(null, "活动不存在，审核失败", false);
@@ -50,15 +50,20 @@ public class AdminController {
      * @param info_id
      * @return
      */
-    @RequestMapping(value = "/rejection", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/activity/rejection", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ReturnJson<?> denyActivityRequest(@RequestParam int type_id, @RequestParam int info_id){
         return adminService.denyActivity(type_id, info_id) ? new ReturnJson<>(null, "活动已被成功拒绝", true) : new ReturnJson<>(null, "活动不存在，拒绝失败", false);
     }
 
-    @RequestMapping(value = "/comment/deletion", method = RequestMethod.POST, produces = "application/json")
+    /**
+     * delete a comment
+     * @param comment_id
+     * @return
+     */
+    @RequestMapping(value = "/comment/{comment_id}", method = RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
-    public ReturnJson<?> deleteComment(@RequestParam int comment_id){
+    public ReturnJson<?> deleteComment(@PathVariable int comment_id){
         return commentService.deleteComment(comment_id) ? new ReturnJson<>(null, "成功删除评论", true) : new ReturnJson<>(null, "删除评论失败", false);
     }
 }

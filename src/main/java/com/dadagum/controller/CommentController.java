@@ -49,9 +49,9 @@ public class CommentController {
      * @param comment_id
      * @return
      */
-    @RequestMapping(value = "/deletion", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/deletion/{comment_id}", method = RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
-    public ReturnJson<?> deleteComment(@RequestParam int comment_id, HttpSession session){
+    public ReturnJson<?> deleteComment(@PathVariable int comment_id, HttpSession session){
         System.out.println(comment_id);
         User user = (User) session.getAttribute("user");
         int session_id = user.getUser_id();
@@ -64,9 +64,9 @@ public class CommentController {
      * @param info_id
      * @return
      */
-    @RequestMapping(value = "/infoList", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/type/{type_id}/info/{info_id}", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public ReturnJson<?> viewSpecificComment(@RequestParam int type_id, @RequestParam int info_id){
+    public ReturnJson<?> viewSpecificComment(@PathVariable int type_id, @PathVariable int info_id){
         System.out.println(type_id + " " + info_id);
         List<CommentDto> result = commentService.getSpecificComment(type_id, info_id);
         return result == null ? new ReturnJson<>(null, "信息不存在，无法查看评论", false) : new ReturnJson<>(result, "查看评论成功", true);

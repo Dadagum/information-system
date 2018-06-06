@@ -24,7 +24,7 @@ public class TeamController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/addition", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/request", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ReturnJson<?> postTeamRequest(TeamRequest request, HttpSession session){
         User user = (User) session.getAttribute("user");
