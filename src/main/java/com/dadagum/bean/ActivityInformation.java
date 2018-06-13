@@ -4,6 +4,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
+/**
+ * 组织或者社团发布的一个活动
+ */
 public class ActivityInformation {
 
     private int type_id;
@@ -76,6 +79,14 @@ public class ActivityInformation {
         this.end_time = end_time;
     }
 
+    public int getType_id() {
+        return type_id;
+    }
+
+    public void setType_id(int type_id) {
+        this.type_id = type_id;
+    }
+
     @Override
     public String toString() {
         return "ActivityInformation{" +
@@ -88,12 +99,5 @@ public class ActivityInformation {
                 '}';
     }
 
-    public int getType_id() {
-        return type_id;
-    }
-
-    public void setType_id(int type_id) {
-        this.type_id = type_id;
-    }
 
 }

@@ -1,21 +1,21 @@
 package com.dadagum.dao;
 
 import com.dadagum.bean.TeamRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
+import com.dadagum.dto.TeamRequestDto;
 
-@Repository
-public class TeamDao {
+import java.util.List;
 
-    static final String TEAM_TABLE = "team_info";
+public interface TeamDao {
 
-    private static final String ADD_TEAM_REQUEST = "INSERT INTO " + TEAM_TABLE + " VALUES(null, 1, ?, ?, ?)";
+    /**
+     * 发布团队招募信息
+     * @param request 团队招募信息
+     */
+    public void addTeamRequest(TeamRequest request);
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    public void addTeamRequest(TeamRequest request){
-        jdbcTemplate.update(ADD_TEAM_REQUEST, request.getTitle(), request.getIntroduction(), request.getUser_id());
-    }
+    /**
+     * 获取所有团队招募信息
+     * @return 团队招募信息列表
+     */
+    public List<TeamRequestDto> getTeamRequestList();
 }

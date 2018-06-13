@@ -20,7 +20,7 @@ public class TeamController {
     private TeamService teamService;
 
     /**
-     * add a team recruitment request
+     * 增加一个团队招募请求
      * @param request
      * @return
      */
@@ -30,7 +30,19 @@ public class TeamController {
         User user = (User) session.getAttribute("user");
         if (user == null) return new ReturnJson<>(null, "请先登陆", false);
         System.out.println(request);
+        request.setUser_id(user.getUser_id());
         teamService.postTeamRequest(request);
+        request.setUser_id(-1);
         return new ReturnJson<>(request, "团队招募信息发布成功", true);
+    }
+
+    /**
+     * 得到所有团队招募信息
+     * @return
+     */
+    @RequestMapping(value = "/requests", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public ReturnJson<?> getTeamRequestList(){
+        return null;
     }
 }

@@ -1,5 +1,8 @@
 package com.dadagum.bean;
 
+/**
+ * 团队招募信息
+ */
 public class TeamRequest {
     private String title;
     private String introduction;

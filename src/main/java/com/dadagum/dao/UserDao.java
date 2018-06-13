@@ -3,115 +3,86 @@ package com.dadagum.dao;
 import com.dadagum.bean.User;
 import com.dadagum.dto.ActivityInfoDto;
 import com.dadagum.dto.UserDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Repository
-public class UserDao {
-
-    static final String USER_TABLE = "user";
-
-    static final String FAVOR_TABLE = "favor";
-
-    static final String PRIORITY_TABLE = "priority";
-
-    private static final String INSERT_USER = "INSERT INTO " + USER_TABLE + " VALUES(null,?,?,?)";
-
-    private static final String GET_ID_BY_NAME_AND_PWD = "SELECT user_id FROM " + USER_TABLE + " WHERE username=? AND password=?";
-
-    private static final String UPDATE_PERSONAL_INFO = "UPDATE " + USER_TABLE + " SET password = ? WHERE user_id = ?";
-
-    private static final String GET_PERSONAL_INFO = "SELECT username, email FROM " + USER_TABLE + " WHERE user_id = ?";
-
-    private static final String GET_USER_PRIORITY = "SELECT identity from " + PRIORITY_TABLE + " WHERE uid = ?";
-
-    private static final String GET_FAVOR_LIST = "SELECT org_name, introduction, name, start_time, end_time FROM " + FAVOR_TABLE + " NATURAL JOIN " + ActivityDao.ACTIVITY_TABLE + " WHERE user_id = ?";
-
-    private static final String HAS_USER_REGISTER = "SELECT count(*) FROM " + USER_TABLE + " WHERE username = ? OR email = ?";
-
-    private static final String IS_NORMAL_USER = "SELECT count(*) FROM " + PRIORITY_TABLE + " WHERE user_id = ?";
-
-    private static final String IS_MATCH_PWD_NAMD = "SELECT count(*) FROM " + USER_TABLE + " WHERE username = ? AND password=?";
-
-    private static final String GET_USER_BY_NAME = "SELECT * FROM " + USER_TABLE + " WHERE username = ?";
-
-    private JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+public interface UserDao {
 
     /**
-     * add a user into database
-     * @param user
+     * 增加一个用户
+     * @param user 用户信息
      */
-    public void insertUser(User user){
-        jdbcTemplate.update(INSERT_USER, user.getUsername(), user.getEmail(), user.getPassword());
-    }
+    public void addUser(User user);
 
-    public int update(User user){
-        return jdbcTemplate.update(UPDATE_PERSONAL_INFO, user.getPassword(), user.getUser_id());
-    }
+    /**
+     * 更新用户信息
+     * @param user 用户信息
+     * @return
+     */
+    public boolean update(User user);
 
-    public UserDto getPersonalInfo(int user_id){
-        final UserDto userDto = new UserDto();
-        jdbcTemplate.query(GET_PERSONAL_INFO, new Object[]{user_id}, resultSet -> {
-            userDto.setEmail(resultSet.getString("email"));
-            userDto.setUsername(resultSet.getString("username"));
-        });
-        return userDto;
-    }
+    /**
+     * 获得个人信息
+     * @param user_id
+     * @return
+     */
+    public UserDto getPersonalInfo(int user_id);
 
-    public String getPriority(int user_id){
-        return jdbcTemplate.queryForObject(GET_USER_PRIORITY, new Object[]{user_id}, String.class);
-    }
+    /**
+     * 获得个人权限
+     * @param user_id 用户id
+     * @return
+     */
+    public String getPriority(int user_id);
 
-    public List<ActivityInfoDto> getFavorList(int user_id){
-        List<ActivityInfoDto> result = new ArrayList<>();
-        jdbcTemplate.query(GET_FAVOR_LIST, new Object[]{user_id}, resultSet -> {
-            ActivityInfoDto tmp = new ActivityInfoDto();
-            tmp.setOrg_name(resultSet.getString("org_name"));
-            tmp.setIntroduction(resultSet.getString("introduction"));
-            tmp.setName(resultSet.getString("name"));
-            tmp.setStart_time(resultSet.getString("start_time"));
-            tmp.setEnd_time(resultSet.getString("end_time"));
-            tmp.setInfo_id(resultSet.getInt("info_id"));
-            tmp.setType_id(resultSet.getInt("type_id"));
-            result.add(tmp);
-        });
-        return result;
-    }
+    /**
+     * 判断是否为普通用户
+     * @param user_id 用户id
+     * @return
+     */
+    public boolean isNormalUser(int user_id);
 
-    public boolean hasUser(User user){
-        return jdbcTemplate.queryForObject(HAS_USER_REGISTER, new Object[]{user.getUsername(), user.getEmail()}, int.class) == 1;
-    }
+    /**
+     * 获得个人所有收藏活动的信息列表
+     * @param user_id
+     * @return
+     */
+    public List<ActivityInfoDto> getFavorList(int user_id);
 
-    public boolean isPwdMatchName(User user){
-        return jdbcTemplate.queryForObject(IS_MATCH_PWD_NAMD, new Object[]{user.getUsername(), user.getPassword()}, int.class) == 1;
-    }
+    /**
+     * 判断某一个用户是否存在
+     * @param user 唯一的用户名和邮箱
+     * @return
+     */
+    public boolean hasUser(User user);
 
-    public boolean isNormalUser(int user_id){
-        return jdbcTemplate.queryForObject(IS_NORMAL_USER, new Object[]{user_id}, int.class) == 0;
-    }
+    /**
+     * 根据用户名获得用户的id
+     * @param username 用户名
+     * @return 用户id
+     */
+    public int getUserIdByName(String username);
 
-    public int getUserId(User user){
-        return jdbcTemplate.queryForObject(GET_ID_BY_NAME_AND_PWD, new Object[]{user.getUsername(), user.getPassword()}, int.class);
-    }
+    /**
+     * 判断用户名和密码是否匹配
+     * @param user 用户名和密码
+     * @return
+     */
+    public boolean isPwdMatchName(User user);
 
-    public User getUserByName(String username){
-        User user = new User();
-        jdbcTemplate.query(GET_USER_BY_NAME, new Object[]{username}, resultSet -> {
-            user.setUser_id(resultSet.getInt("user_id"));
-            user.setUsername(resultSet.getString("username"));
-            user.setPassword(resultSet.getString("password"));
-            user.setEmail(resultSet.getString("email"));
-        });
-        return user;
-    }
+    /**
+     * 根据用户名获得用户的所有信息
+     * @param username 用户名
+     * @return
+     */
+    public User getUserByName(String username);
+
+    /**
+     * 某一个用户收藏某一个活动
+     * @param user_id 用户id
+     * @param info_id 活动id
+     */
+    public void addFavor(int user_id, int info_id);
+
 
 }

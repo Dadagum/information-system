@@ -4,6 +4,9 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 
+/**
+ * 表示一个用户
+ */
 public class User {
 
     private int user_id;

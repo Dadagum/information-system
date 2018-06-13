@@ -3,62 +3,66 @@ package com.dadagum.service;
 import com.dadagum.bean.User;
 import com.dadagum.dto.ActivityInfoDto;
 import com.dadagum.dto.UserDto;
-import com.dadagum.dao.UserDao;
-import com.dadagum.util.DateValidator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service
-public class UserService {
-
-    @Autowired
-    private UserDao userDao;
+public interface UserService {
 
     /**
-     * add a user
-     * @param user
+     * 增加一个用户
+     * @param user 用户信息
+     * @param r_password 重复密码
+     * @return
      */
-    public List<String> addUser(User user, String r_password){
-        List<String> msg = DateValidator.validateAllRegister(user, r_password);
-        if (msg == null || !userDao.hasUser(user)){
-            userDao.insertUser(user);
-            return null;
-        }
-        // default a normal user so there is no need to insert priority table
-        return msg;
-    }
+    public List<String> addUser(User user, String r_password);
 
     /**
-     * login check
-     * @param user
-     * @return user_id if the user exists
+     * 用户登陆
+     * @param user 用户名和密码
+     * @return
      */
-    public int loginCheck(User user){
-        return userDao.isPwdMatchName(user) ? userDao.getUserId(user) : 0;
-    }
+    public int loginCheck(User user);
 
-    public boolean update(User user){
-        return userDao.update(user) == 1;
-    }
+    /**
+     * 更新个人信息
+     * @param user 新的用户信息
+     * @return
+     */
+    public boolean update(User user);
 
-    public UserDto getPersonalInfo(int user_id){
-        return userDao.getPersonalInfo(user_id);
-    }
+    /**
+     * 得到个人信息
+     * @param user_id 用户id
+     * @return
+     */
+    public UserDto getPersonalInfo(int user_id);
 
-    public List<ActivityInfoDto> getFavorList(int user_id){
-        return userDao.getFavorList(user_id);
-    }
+    /**
+     * 得到个人收藏活动列表
+     * @param user_id 用户id
+     * @return
+     */
+    public List<ActivityInfoDto> getFavorList(int user_id);
 
-    public String getUserPriority(int user_id){
-        if (userDao.isNormalUser(user_id)) return null;
-        return userDao.getPriority(user_id);
-    }
+    /**
+     * 得到用户权限
+     * @param user_id 用户id
+     * @return
+     */
+    public String getUserPriority(int user_id);
 
-    public User getUser(String username){
-        return userDao.getUserByName(username);
-    }
+    /**
+     * 根据唯一的用户名得到整个用户对象
+     * @param username 唯一的用户名
+     * @return
+     */
+    public User getUser(String username);
 
+    /**
+     * 用户收藏某个活动
+     * @param user_id 用户id
+     * @param info_id 活动id
+     * @return
+     */
+    public boolean addFavorActivity(int user_id, int info_id);
 }

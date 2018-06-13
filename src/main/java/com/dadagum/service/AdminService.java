@@ -1,20 +1,35 @@
 package com.dadagum.service;
 
-import com.dadagum.dao.AdminDao;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+public interface AdminService {
 
-@Service
-public class AdminService {
+    /**
+     * 通过一个活动
+     * @param info_id
+     * @return
+     */
+    public boolean passActivity(int info_id);
 
-    @Autowired
-    private AdminDao adminDao;
+    /**
+     * 否决一个活动
+     * @param type_id
+     * @return
+     */
+    public boolean denyActivity(int type_id);
 
-    public boolean passActivity(int type_id, int info_id){
-        return adminDao.passActivity(type_id, info_id) == 1;
-    }
 
-    public boolean denyActivity(int type_id, int info_id){
-        return adminDao.denyActivity(type_id, info_id) == 1;
-    }
+    /**
+     * 删除一个已经通过的活动
+     * @param infoId
+     * @return
+     */
+    public boolean deleteActivity(int infoId);
+
+    /**
+     * 删除一个评论
+     * @param comment_id
+     * @return
+     */
+    public boolean deleteComment(int comment_id);
+
+
 }

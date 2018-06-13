@@ -25,7 +25,7 @@ public class UserController {
     private UserService userService;
 
     /**
-     * user register
+     * 注册一个账号
      * @param user
      * @return
      */
@@ -48,12 +48,13 @@ public class UserController {
     }
 
     /**
-     * user login
+     * 用户登陆
      * @return
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public ReturnJson<?> login(User user, HttpSession session){
+        if (user.getUsername() == null || "".equals(user.getUsername()) || user.getPassword() == null || "".equals(user.getPassword())) return new ReturnJson<>(null, "请填好用户名或者信息", false);
         int user_id = userService.loginCheck(user);
         System.out.println(user_id);
         if (user_id != 0){
@@ -67,7 +68,7 @@ public class UserController {
     }
 
     /**
-     * update personal profile
+     * 更新个人信息
      * @param user
      * @return
      */
@@ -83,8 +84,8 @@ public class UserController {
         return userService.update(user) ? new ReturnJson<>(new UserDto(user), "更新成功", true) : new ReturnJson<>(null, "您无权更新他人信息", false);
     }
 
-    /**TODO
-     * get personal profile info
+    /**
+     * 得到个人信息
      * @return
      */
     @RequestMapping(value = "/profile/{user_id}", method = RequestMethod.GET, produces = "application/json")
@@ -94,13 +95,27 @@ public class UserController {
         return new ReturnJson<>(result, "成功", true);
     }
 
-    @RequestMapping(value = "/favor", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/favor", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public ReturnJson<?> getFavorList( HttpSession session){
         User user = (User) session.getAttribute("user");
         if (user == null ) return new ReturnJson<>(null, "请先登陆", false);
         List<ActivityInfoDto> result = userService.getFavorList(user.getUser_id());
         return new ReturnJson<>(result, "成功", true);
+    }
+
+    /**
+     * 得到个人收藏列表
+     * @param info_id
+     * @param session
+     * @return
+     */
+    @RequestMapping(value = "/favor", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public ReturnJson<?> addFavorActivity(@RequestParam int info_id, HttpSession session){
+        User user = (User) session.getAttribute("user");
+        if (user == null) return new ReturnJson<>(null, "请先登陆", false);
+        return userService.addFavorActivity(user.getUser_id(), info_id) ? new ReturnJson<>(null, "关注成功！", true) : new ReturnJson<>(null, "活动不存在", false);
     }
 
 }

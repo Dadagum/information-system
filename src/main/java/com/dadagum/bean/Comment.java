@@ -5,6 +5,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
+/**
+ * 评论信息
+ */
 public class Comment {
     private int user_id;
     private int type_id;

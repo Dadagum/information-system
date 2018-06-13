@@ -2,87 +2,50 @@ package com.dadagum.dao;
 
 import com.dadagum.bean.ActivityInformation;
 import com.dadagum.dto.ActivityInfoDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Repository
-public class ActivityDao {
-
-    static final String ACTIVITY_TABLE = "activity_info";
-
-    private static final String UPDATE_ACTIVITY = "UPDATE " + ACTIVITY_TABLE + " SET org_name = ?, introduction = ?, name = ?, start_time = ?, end_time = ? WHERE info_id = ? AND user_id = ?";
-
-    private static final String ADD_ACTIVITY = "INSERT INTO " + ACTIVITY_TABLE + " VALUES(null, 2, ?, ?, ?, ?, ?, ?)";
-
-    private static final String DELETE_ACTIVITY = "DELETE FROM " + ACTIVITY_TABLE + " WHERE info_id = ?";
-
-    private static final String GET_PASS_INFO_LIST = "SELECT org_name, introduction, name, start_time, end_time FROM " + ACTIVITY_TABLE + " NATURAL JOIN " + InfoRequestDao.INFO_REQUEST_TABLE + " WHERE status = 'pass'";
-
-    private static final String GET_SINGLE_INFO = "SELECT org_name, introduction, name, start_time, end_time FROM " + ACTIVITY_TABLE + " NATURAL JOIN " + InfoRequestDao.INFO_REQUEST_TABLE + " WHERE status = 'pass' AND info_id = ?";
-
-    private static final String ADD_FAVOR = "INSERT INTO " + UserDao.FAVOR_TABLE + " VALUES(?, 2, ?)";
-
-    private static final String GET_COUNT_BY_INFOID = "SELECT count(*) FROM " + ACTIVITY_TABLE + " WHERE info_id = ?";
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    public int updateActivity(ActivityInformation info){
-        return jdbcTemplate.update(UPDATE_ACTIVITY, info.getOrg_name(), info.getIntroduction(), info.getName(), info.getStart_time(), info.getEnd_time(), info.getInfo_id(), info.getUser_id(), info.getUser_id());
-    }
-
-    public int deleteActivity(int info_id){
-        return jdbcTemplate.update(DELETE_ACTIVITY, info_id);
-    }
-
-    public List<ActivityInfoDto> getPassInfoList(){
-        List<ActivityInfoDto> result = new ArrayList<>();
-        jdbcTemplate.query(GET_PASS_INFO_LIST, resultSet -> {
-            ActivityInfoDto tmp = new ActivityInfoDto();
-            tmp.setOrg_name(resultSet.getString("org_name"));
-            tmp.setIntroduction(resultSet.getString("introduction"));
-            tmp.setName(resultSet.getString("name"));
-            tmp.setStart_time(resultSet.getString("start_time"));
-            tmp.setEnd_time(resultSet.getString("end_time"));
-            tmp.setInfo_id(resultSet.getInt("info_id"));
-            tmp.setType_id(resultSet.getInt("type_id"));
-            result.add(tmp);
-        });
-        return result;
-    }
-
-    public ActivityInfoDto getSpecificInfo(int info_id){
-        final ActivityInfoDto result = new ActivityInfoDto();
-        jdbcTemplate.query(GET_SINGLE_INFO, new Object[]{info_id}, (resultSet) -> {
-            result.setOrg_name(resultSet.getString("org_name"));
-            result.setIntroduction(resultSet.getString("introduction"));
-            result.setName(resultSet.getString("name"));
-            result.setStart_time(resultSet.getString("start_time"));
-            result.setEnd_time(resultSet.getString("end_time"));
-            result.setInfo_id(resultSet.getInt("info_id"));
-            result.setType_id(resultSet.getInt("type_id"));
-        });
-        return result;
-    }
+public interface ActivityDao {
 
     /**
-     * add a activity
-     * @param activity
+     * 增加一个活动
+     * @param activity 活动信息
      */
-    public void addActivity(ActivityInformation activity){
-        jdbcTemplate.update(ADD_ACTIVITY, activity.getOrg_name(), activity.getIntroduction(), activity.getName(), activity.getStart_time(), activity.getEnd_time(), activity.getUser_id());
-    }
+    public void addActivity(ActivityInformation activity);
 
-    public int addFavor(int user_id, int info_id){
-        return jdbcTemplate.update(ADD_FAVOR, user_id, info_id);
-    }
+    /**
+     * 更新一个活动信息
+     * @param info 新的活动信息
+     * @return
+     */
+    public boolean updateActivity(ActivityInformation info);
 
-    public int getCountByInfoId(int info_id){
-        return jdbcTemplate.queryForObject(GET_COUNT_BY_INFOID, new Object[]{info_id}, int.class);
-    }
+    /**
+     * 删除一个原本审核通过的活动
+     * @param info_id 活动id
+     * @return
+     */
+    public boolean deleteActivity(int info_id);
+
+    /**
+     * 得到所有通过审核的活动
+     * @return
+     */
+    public List<ActivityInfoDto> getPassInfoList();
+
+    /**
+     * 得到某个活动的详细信息
+     * @param info_id 活动id
+     * @return
+     */
+    public ActivityInfoDto getSpecificInfo(int info_id);
+
+    /**
+     * 某个活动是否存在
+     * @param info_id 活动id
+     * @return
+     */
+    public boolean hasActivivy(int info_id);
+
 
 }

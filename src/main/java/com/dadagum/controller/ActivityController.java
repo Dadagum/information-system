@@ -23,8 +23,8 @@ public class ActivityController {
     private ActivityService activityService;
 
     /**
-     * add an activity
-     * @param
+     * 增加一个活动
+     * @param activity 活动信息
      * @return
      */
     @RequestMapping(value = "/info", method = RequestMethod.POST, produces = "application/json")
@@ -33,7 +33,7 @@ public class ActivityController {
         System.out.println(activity);
         // check if session exists
         User user = (User) session.getAttribute("user");
-        if (user == null) return new ReturnJson<>(null, "请先登陆", false);
+        if (user == null || user.getPriority().equals("org")) return new ReturnJson<>(null, "您没有权限增加活动", false);
         if (bindingResult.hasErrors()){
             List<FieldError> list = bindingResult.getFieldErrors();
             for (FieldError fieldError : list) System.out.println(fieldError.getField());
@@ -41,14 +41,15 @@ public class ActivityController {
         }
         activity.setUser_id(user.getUser_id());
         try {
-            return activityService.addActivity(activity, user.getUser_id()) ? new ReturnJson<>(activity, "您的活动请求我们已经收到，活动有待审核！", true): new ReturnJson<>(null, "您无权添加活动", false);
+             activityService.addActivity(activity);
+             return new ReturnJson<>(new ActivityInfoDto(activity), "您的活动请求我们已经收到，活动有待审核！", true);
         } catch (RuntimeException e){
             return new ReturnJson<>(null, "发生一个意外的错误，添加活动失败", false);
         }
     }
 
     /**
-     * get pass activity information list
+     * 显示已经经过审核的活动
      * @return
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
@@ -59,7 +60,7 @@ public class ActivityController {
     }
 
     /**
-     * view a specific information
+     * 查看一个活动的详细信息
      * @param info_id
      * @return
      */
@@ -71,7 +72,7 @@ public class ActivityController {
     }
 
     /**
-     * update a activity information
+     * 更新一个活动的信息
      * @param activity
      * @param bindingResult
      * @return
@@ -82,31 +83,19 @@ public class ActivityController {
         System.out.println(activity);
         // check if session exists
         User user = (User) session.getAttribute("user");
-        if (user == null) return new ReturnJson<>(null, "请先登陆", false);
+        if (user == null || user.getPriority().equals("org")) return new ReturnJson<>(null, "您无权更新活动", false);
         if (bindingResult.hasErrors()){
             List<FieldError> list = bindingResult.getFieldErrors();
             for (FieldError fieldError : list) System.out.println(fieldError.getField());
             return new ReturnJson<>(null, "请检查您的输入信息", false);
         }
         try {
-            return activityService.updateActivity(activity, user.getUser_id()) ? new ReturnJson<>(activity, "您的活动请求我们已经收到，活动有待审核！", true): new ReturnJson<>(null, "您无权更新活动", false);
+            return activityService.updateActivity(activity, user.getUser_id()) ? new ReturnJson<>(new ActivityInfoDto(activity), "更新成功", true): new ReturnJson<>(null, "您无权更新活动", false);
         } catch (RuntimeException e){
             return new ReturnJson<>(null, "发生一个意外的错误，更新活动失败", false);
         }
     }
 
-    /**
-     * add a specific activity to favorite list
-     * @param info_id
-     * @param session
-     * @return
-     */
-    @RequestMapping(value = "/favor", method = RequestMethod.POST, produces = "application/json")
-    @ResponseBody
-    public ReturnJson<?> addFavorActivity(@RequestParam int info_id, HttpSession session){
-        User user = (User) session.getAttribute("user");
-        if (user == null) return new ReturnJson<>(null, "请先登陆", false);
-        return activityService.addFavorActivity(user.getUser_id(), info_id) ? new ReturnJson<>(null, "关注成功！", true) : new ReturnJson<>(null, "活动不存在", false);
-    }
+
 
 }

@@ -23,7 +23,7 @@ public class CommentController {
     private CommentService commentService;
 
     /**
-     * make a comment below specific info
+     * 在某一个信息底下进行评论
      * @param comment
      * @param bindingResult
      * @return
@@ -45,7 +45,7 @@ public class CommentController {
     }
 
     /**
-     * delete a comment for normal user
+     * 删除自己的评论
      * @param comment_id
      * @return
      */
@@ -59,7 +59,7 @@ public class CommentController {
     }
 
     /**
-     * view specific comment
+     * 查看一个信息底下的评论
      * @param type_id
      * @param info_id
      * @return
