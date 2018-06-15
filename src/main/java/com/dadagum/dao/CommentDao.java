@@ -34,4 +34,11 @@ public interface CommentDao {
      * @return
      */
     public List<CommentDto> getSpecificComment(int type_id, int info_id);
+
+    /**
+     * 返回一个评论的主人
+     * @param comment_id 评论id
+     * @return
+     */
+    public int getCommentSenderId(int comment_id);
 }

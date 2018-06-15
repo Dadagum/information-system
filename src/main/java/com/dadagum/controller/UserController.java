@@ -61,6 +61,7 @@ public class UserController {
             user = userService.getUser(user.getUsername());
             String priority = userService.getUserPriority(user_id);
             if (priority != null) user.setPriority(priority);
+            System.out.println(user.getPriority());
             session.setAttribute("user", user);
             return new ReturnJson<>(null, "登陆成功", true);
         }
@@ -68,17 +69,19 @@ public class UserController {
     }
 
     /**
-     * 更新个人信息
-     * @param user
+     * 更新个人信息(暂时为密码)
+     * @param password 密码
      * @return
      */
     @RequestMapping(value = "/profile", method = RequestMethod.PATCH, produces = "application/json")
     @ResponseBody
-    public ReturnJson<?> update(@Valid User user, BindingResult bindingResult, HttpSession session){
-        if (bindingResult.hasErrors()) return new ReturnJson<>(null, "请检查你填写的信息", false);
+    public ReturnJson<?> update(@RequestBody Map<String, String> password, HttpSession session){
+        if (password.get("password") == null) return new ReturnJson<>(null, "请填写修改后的密码", false);
+        System.out.println(password);
         User s_user = (User) session.getAttribute("user");
         if(s_user == null) return new ReturnJson<>(null, "请先登陆", false);
-        System.out.println(user);
+        User user = new User();
+        user.setPassword(password.get("password"));
         user.setUser_id(s_user.getUser_id());
         System.out.println(user.getUser_id());
         return userService.update(user) ? new ReturnJson<>(new UserDto(user), "更新成功", true) : new ReturnJson<>(null, "您无权更新他人信息", false);
@@ -95,6 +98,11 @@ public class UserController {
         return new ReturnJson<>(result, "成功", true);
     }
 
+    /**
+     * 得到个人的收藏信息
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "/favor", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public ReturnJson<?> getFavorList( HttpSession session){

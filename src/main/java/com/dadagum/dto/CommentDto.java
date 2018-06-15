@@ -16,7 +16,7 @@ public class CommentDto {
         info_id = comment.getInfo_id();
         parent_id = comment.getParent_id();
         this.comment = comment.getComment();
-        create_time = ConvertUtil.DateToString(comment.getCreate_time());
+        create_time = comment.getCreate_time();
     }
 
     public CommentDto(){

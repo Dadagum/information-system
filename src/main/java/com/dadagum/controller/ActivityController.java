@@ -31,10 +31,9 @@ public class ActivityController {
     @ResponseBody
     public ReturnJson<?> addActivityInfo(@Valid ActivityInformation activity, BindingResult bindingResult, HttpSession session){
         System.out.println(activity);
-        // check if session exists
         User user = (User) session.getAttribute("user");
-        if (user == null || user.getPriority().equals("org")) return new ReturnJson<>(null, "您没有权限增加活动", false);
-        if (bindingResult.hasErrors()){
+        if (user == null || user.getPriority() == null || user.getPriority().equals("") || !user.getPriority().equals("org")) return new ReturnJson<>(null, "您没有权限增加活动", false);
+        if (bindingResult.hasErrors() || activity.getStart_time() == null || activity.getEnd_time() == null){
             List<FieldError> list = bindingResult.getFieldErrors();
             for (FieldError fieldError : list) System.out.println(fieldError.getField());
             return new ReturnJson<>(null, "请检查您的输入信息", false);
@@ -44,7 +43,8 @@ public class ActivityController {
              activityService.addActivity(activity);
              return new ReturnJson<>(new ActivityInfoDto(activity), "您的活动请求我们已经收到，活动有待审核！", true);
         } catch (RuntimeException e){
-            return new ReturnJson<>(null, "发生一个意外的错误，添加活动失败", false);
+            System.out.println("error:" + e.getMessage());
+            return new ReturnJson<>(null, e.getMessage(), false);
         }
     }
 

@@ -1,6 +1,12 @@
 package com.dadagum.service;
 
+import com.dadagum.dto.ActivityInfoDto;
+
+import java.util.List;
+
 public interface AdminService {
+
+    public List<ActivityInfoDto> getAllActivityInfo();
 
     /**
      * 通过一个活动

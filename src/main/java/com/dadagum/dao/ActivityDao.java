@@ -10,8 +10,9 @@ public interface ActivityDao {
     /**
      * 增加一个活动
      * @param activity 活动信息
+     * @Return 自增键值
      */
-    public void addActivity(ActivityInformation activity);
+    public int addActivity(ActivityInformation activity);
 
     /**
      * 更新一个活动信息
@@ -32,6 +33,12 @@ public interface ActivityDao {
      * @return
      */
     public List<ActivityInfoDto> getPassInfoList();
+
+    /**
+     * 得到所有的活动
+     * @return
+     */
+    public List<ActivityInfoDto> getAllInfoList();
 
     /**
      * 得到某个活动的详细信息

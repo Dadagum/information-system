@@ -2,6 +2,7 @@ package com.dadagum.bean;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -11,15 +12,21 @@ public class ActivityInformation {
 
     private int type_id;
     private int info_id;
+
+    @NotNull
     private String org_name;
+
     private int user_id;
+    @NotNull
     private String introduction;
+
+    @NotNull
     private String name;
 
-    @DateTimeFormat(pattern = "yyyy:MM:dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date start_time;
 
-    @DateTimeFormat(pattern = "yyyy:MM:dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date end_time;
 
     public int getInfo_id() {

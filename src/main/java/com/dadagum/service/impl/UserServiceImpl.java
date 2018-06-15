@@ -10,6 +10,7 @@ import com.dadagum.util.DateValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,11 +23,14 @@ public class UserServiceImpl implements UserService{
     private ActivityDao activityDao;
 
     public List<String> addUser(User user, String r_password){
-        List<String> msg = DateValidator.validateAllRegister(user, r_password);
-        if (msg == null || !userDao.hasUser(user)){
+        List<String> msg = DateValidator.validateAllRegister(user, r_password); // TODO
+        if (msg == null && !userDao.hasUser(user)){
             userDao.addUser(user);
             return null;
         }
+        // TODO
+        msg = new ArrayList<>();
+        msg.add("error");
         return msg;
     }
 

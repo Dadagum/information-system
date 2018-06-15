@@ -26,8 +26,9 @@ public class ActivityServiceImpl implements ActivityService{
 
     @Transactional
     public void addActivity(ActivityInformation activity){
-        informationDao.addRequest(2, activity.getInfo_id());
-        activityDao.addActivity(activity);
+        int info_id = activityDao.addActivity(activity);
+        System.out.println("成功插入, info_id" + info_id);
+        informationDao.addRequest(2, info_id);
     }
 
     public boolean updateActivity(ActivityInformation activity, int user_id){

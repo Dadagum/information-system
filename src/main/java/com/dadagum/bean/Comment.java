@@ -3,6 +3,7 @@ package com.dadagum.bean;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -10,13 +11,15 @@ import java.util.Date;
  */
 public class Comment {
     private int user_id;
+
+    @NotNull
     private int type_id;
+
+    @NotNull
     private int info_id;
     private int comment_id;
     private int parent_id;
-
-    @DateTimeFormat(pattern = "yyyy:MM:dd HH:mm:ss")
-    private Date create_time;
+    private String create_time;
 
     @Length(min = 5, max = 500)
     private String comment;
@@ -61,19 +64,19 @@ public class Comment {
         this.parent_id = parent_id;
     }
 
-    public Date getCreate_time() {
-        return create_time;
-    }
-
-    public void setCreate_time(Date create_time) {
-        this.create_time = create_time;
-    }
-
     public String getComment() {
         return comment;
     }
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getCreate_time() {
+        return create_time;
+    }
+
+    public void setCreate_time(String create_time) {
+        this.create_time = create_time;
     }
 }

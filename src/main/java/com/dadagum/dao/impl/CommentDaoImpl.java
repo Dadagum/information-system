@@ -23,6 +23,8 @@ public class CommentDaoImpl implements CommentDao{
 
     private static final String GET_COMMENT_LIST = "SELECT username, type_id, info_id, parent_id, comment, create_time FROM " + COM_TABLE_NAME + " NATURAL JOIN " + UserDaoImpl.USER_TABLE + " WHERE type_id = ? AND info_id = ?";
 
+    private static final String GET_COMMENT_SENDER = "SELECT user_id FROM " + COM_TABLE_NAME + " WHERE comment_id=?";
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -31,7 +33,7 @@ public class CommentDaoImpl implements CommentDao{
     }
 
     public void addComment(Comment comment){
-        jdbcTemplate.update(INSERT_COMMENT_SQL, comment.getUser_id(), comment.getType_id(), comment.getInfo_id(), comment.getParent_id(), comment.getComment(), comment.getCreate_time());
+        jdbcTemplate.update(INSERT_COMMENT_SQL, comment.getUser_id(), comment.getType_id(), comment.getInfo_id(), comment.getParent_id(), comment.getCreate_time(), comment.getComment());
     }
 
     public boolean deleteComment(int comment_id){
@@ -51,5 +53,10 @@ public class CommentDaoImpl implements CommentDao{
             result.add(commentDto);
         });
         return result;
+    }
+
+    @Override
+    public int getCommentSenderId(int comment_id) {
+        return jdbcTemplate.queryForObject(GET_COMMENT_SENDER, new Object[]{comment_id}, int.class);
     }
 }

@@ -8,16 +8,23 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class InformationDaoImpl implements InformationDao{
 
-    private static final String CHECK_INFO_EXIST_SQL = "SELECT * FROM " + ActivityDaoImpl.ACTIVITY_TABLE + " WHERE info_id = ? AND type_id = ?";
+    static final String INFO_REQUEST_TABLE = "info_addition_request";
+
+    private static final String CHECK_INFO_EXIST_SQL = "SELECT count(*) FROM " + ActivityDaoImpl.ACTIVITY_TABLE + " WHERE info_id = ? AND type_id = ?";
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    static final String INFO_REQUEST_TABLE = "info_addtion_request";
+    private static final String INSERT_REQUEST = "INSERT INTO " + INFO_REQUEST_TABLE + " VALUES(?, ?, 'waiting')";
 
-    private static final String INSERT_REQUEST = "INSERT INTO " + INFO_REQUEST_TABLE + " VALUES(?, ?, waiting)";
+    private static final String DELETE_REQUEST = "DELETE FROM " + INFO_REQUEST_TABLE + " WHERE info_id = ? AND type_id = ?";
 
     public void addRequest(int type_id, int info_id){
-        jdbcTemplate.update(INSERT_REQUEST, type_id, info_id);
+        jdbcTemplate.update(INSERT_REQUEST, info_id, type_id);
+    }
+
+    @Override
+    public void deleteRequest(int type_id, int info_id) {
+        jdbcTemplate.update(DELETE_REQUEST, info_id, type_id);
     }
 
     public boolean hasInfo(int info_id, int type_id){

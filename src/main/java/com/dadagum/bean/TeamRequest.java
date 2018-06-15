@@ -1,11 +1,18 @@
 package com.dadagum.bean;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 团队招募信息
  */
 public class TeamRequest {
+
+    @NotNull
     private String title;
+
+    @NotNull
     private String introduction;
+
     private int user_id;
 
     public String getTitle() {

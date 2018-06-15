@@ -4,6 +4,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
+    <!-- Cros Filter -->
+    <filter>
+        <filter-name>CorsFilter</filter-name>
+        <filter-class>com.dadagum.filter.CorsFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>CorsFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <!-- config dispatcher servlet -->
     <servlet>
         <servlet-name>demo</servlet-name>

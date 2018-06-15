@@ -28,7 +28,7 @@ public class UserDaoImpl implements UserDao{
 
     private static final String GET_PERSONAL_INFO = "SELECT username, email FROM " + USER_TABLE + " WHERE user_id = ?";
 
-    private static final String GET_USER_PRIORITY = "SELECT identity from " + PRIORITY_TABLE + " WHERE uid = ?";
+    private static final String GET_USER_PRIORITY = "SELECT identity from " + PRIORITY_TABLE + " WHERE user_id = ?";
 
     private static final String GET_FAVOR_LIST = "SELECT org_name, introduction, name, start_time, end_time FROM " + FAVOR_TABLE + " NATURAL JOIN " + ActivityDaoImpl.ACTIVITY_TABLE + " WHERE user_id = ?";
 

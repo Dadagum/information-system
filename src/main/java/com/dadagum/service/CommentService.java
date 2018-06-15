@@ -29,4 +29,5 @@ public interface CommentService {
      * @return
      */
     public List<CommentDto> getSpecificComment(int type_id, int info_id);
+
 }

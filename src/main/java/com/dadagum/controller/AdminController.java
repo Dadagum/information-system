@@ -14,7 +14,17 @@ public class AdminController {
     private AdminService adminService;
 
     /**
-     * 删除一个原本审核通过的活动
+     * 查看所有的活动
+     * @return
+     */
+    @RequestMapping(value = "/activity/list", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public ReturnJson<?> getAllActivityInfo(){
+        return new ReturnJson<>(adminService.getAllActivityInfo(), "成功", true);
+    }
+
+    /**
+     * 删除一个活动
      * @param info_id 活动的id
      * @return
      */
