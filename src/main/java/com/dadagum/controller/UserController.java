@@ -113,7 +113,7 @@ public class UserController {
     }
 
     /**
-     * 得到个人收藏列表
+     * 关注某个活动
      * @param info_id
      * @param session
      * @return

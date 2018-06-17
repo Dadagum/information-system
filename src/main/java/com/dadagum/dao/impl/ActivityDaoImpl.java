@@ -39,7 +39,7 @@ public class ActivityDaoImpl implements ActivityDao{
     private JdbcTemplate jdbcTemplate;
 
     public boolean updateActivity(ActivityInformation info){
-        return jdbcTemplate.update(UPDATE_ACTIVITY, info.getOrg_name(), info.getIntroduction(), info.getName(), info.getStart_time(), info.getEnd_time(), info.getInfo_id(), info.getUser_id(), info.getUser_id()) == 1;
+        return jdbcTemplate.update(UPDATE_ACTIVITY, info.getOrg_name(), info.getIntroduction(), info.getName(), info.getStart_time(), info.getEnd_time(), info.getInfo_id(), info.getUser_id()) == 1;
     }
 
     public boolean deleteActivity(int info_id){

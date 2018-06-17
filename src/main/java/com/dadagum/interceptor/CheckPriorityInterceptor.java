@@ -13,7 +13,8 @@ public class CheckPriorityInterceptor implements HandlerInterceptor {
         System.out.println("in CheckPriorityInterceptor : pre handle");
         User user = (User) httpServletRequest.getSession().getAttribute("user");
         if (user == null || user.getPriority() == null || user.getPriority().equals("") || !user.getPriority().equals("admin")){
-            httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            //httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            httpServletResponse.sendRedirect("/error.html");
             System.out.println("deny access : admin");
             return false;
         }

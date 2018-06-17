@@ -23,6 +23,8 @@ public class AdminController {
         return new ReturnJson<>(adminService.getAllActivityInfo(), "成功", true);
     }
 
+
+
     /**
      * 删除一个活动
      * @param info_id 活动的id

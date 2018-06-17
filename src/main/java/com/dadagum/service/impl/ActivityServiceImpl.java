@@ -33,11 +33,12 @@ public class ActivityServiceImpl implements ActivityService{
 
     public boolean updateActivity(ActivityInformation activity, int user_id){
         activity.setUser_id(user_id);
-        return userDao.getPriority(user_id).equals("org") && activityDao.updateActivity(activity);
+        return activityDao.updateActivity(activity);
     }
 
     public List<ActivityInfoDto> getPassInfoList(){
-        return activityDao.getPassInfoList();
+        //return activityDao.getPassInfoList();
+        return activityDao.getAllInfoList();
     }
 
     public ActivityInfoDto getSpecificInfo(int info_id){

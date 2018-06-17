@@ -79,11 +79,11 @@ public class ActivityController {
      */
     @RequestMapping(value = "/info", method = RequestMethod.PATCH, produces = "application/json")
     @ResponseBody
-    public ReturnJson<?> updateActivityInfo(@Valid ActivityInformation activity, BindingResult bindingResult, HttpSession session){
+    public ReturnJson<?> updateActivityInfo(@RequestBody @Valid ActivityInformation activity, BindingResult bindingResult, HttpSession session){
         System.out.println(activity);
-        // check if session exists
         User user = (User) session.getAttribute("user");
-        if (user == null || user.getPriority().equals("org")) return new ReturnJson<>(null, "您无权更新活动", false);
+        System.out.println(user);
+        if (user == null || !user.getPriority().equals("org")) return new ReturnJson<>(null, "您无权更新活动", false);
         if (bindingResult.hasErrors()){
             List<FieldError> list = bindingResult.getFieldErrors();
             for (FieldError fieldError : list) System.out.println(fieldError.getField());

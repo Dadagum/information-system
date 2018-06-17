@@ -18,6 +18,7 @@
 
         <mvc:interceptor>
             <mvc:mapping path="/administration/**"/>
+            <mvc:mapping path="/test.html"/>
             <bean class="com.dadagum.interceptor.CheckPriorityInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
