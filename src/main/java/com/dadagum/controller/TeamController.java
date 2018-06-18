@@ -45,7 +45,7 @@ public class TeamController {
         request.setUser_id(user.getUser_id());
         teamService.postTeamRequest(request);
         request.setUser_id(-1);
-        return new ReturnJson<>(request, "团队招募信息发布成功", true);
+        return new ReturnJson<>(request, "发布成功", true);
     }
 
     /**

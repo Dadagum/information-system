@@ -29,7 +29,8 @@ public class ActivityDaoImpl implements ActivityDao{
 
     private static final String GET_PASS_INFO_LIST = "SELECT org_name, introduction, name, start_time, end_time, info_id FROM " + ACTIVITY_TABLE + " NATURAL JOIN " + InformationDaoImpl.INFO_REQUEST_TABLE + " WHERE status = 'pass'";
 
-    private static final String GET_SINGLE_INFO = "SELECT org_name, introduction, name, start_time, end_time, info_id FROM " + ACTIVITY_TABLE + " NATURAL JOIN " + InformationDaoImpl.INFO_REQUEST_TABLE + " WHERE status = 'pass' AND info_id = ?";
+    // TODO
+    private static final String GET_SINGLE_INFO = "SELECT org_name, introduction, name, start_time, end_time, info_id FROM " + ACTIVITY_TABLE + " NATURAL JOIN " + InformationDaoImpl.INFO_REQUEST_TABLE + " WHERE status = 'waiting' AND info_id = ?";
 
     private static final String HAS_ACTIVITY = "SELECT count(*) FROM " + ACTIVITY_TABLE + " NATURAL JOIN " +  InformationDaoImpl.INFO_REQUEST_TABLE + " WHERE info_id = ? AND status = 'pass'";
 
@@ -39,7 +40,7 @@ public class ActivityDaoImpl implements ActivityDao{
     private JdbcTemplate jdbcTemplate;
 
     public boolean updateActivity(ActivityInformation info){
-        return jdbcTemplate.update(UPDATE_ACTIVITY, info.getOrg_name(), info.getIntroduction(), info.getName(), info.getStart_time(), info.getEnd_time(), info.getInfo_id(), info.getUser_id()) == 1;
+        return jdbcTemplate.update(UPDATE_ACTIVITY, info.getOrg_name(), info.getIntroduction(), info.getName(),  ConvertUtil.DateToString(info.getStart_time()), ConvertUtil.DateToString(info.getEnd_time()), info.getInfo_id(), info.getUser_id()) == 1;
     }
 
     public boolean deleteActivity(int info_id){

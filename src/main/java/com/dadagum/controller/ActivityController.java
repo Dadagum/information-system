@@ -36,12 +36,12 @@ public class ActivityController {
         if (bindingResult.hasErrors() || activity.getStart_time() == null || activity.getEnd_time() == null){
             List<FieldError> list = bindingResult.getFieldErrors();
             for (FieldError fieldError : list) System.out.println(fieldError.getField());
-            return new ReturnJson<>(null, "请检查您的输入信息", false);
+            return new ReturnJson<>(null, "请检查输入信息", false);
         }
         activity.setUser_id(user.getUser_id());
         try {
              activityService.addActivity(activity);
-             return new ReturnJson<>(new ActivityInfoDto(activity), "您的活动请求我们已经收到，活动有待审核！", true);
+             return new ReturnJson<>(new ActivityInfoDto(activity), "添加成功", true);
         } catch (RuntimeException e){
             System.out.println("error:" + e.getMessage());
             return new ReturnJson<>(null, e.getMessage(), false);
@@ -84,15 +84,16 @@ public class ActivityController {
         User user = (User) session.getAttribute("user");
         System.out.println(user);
         if (user == null || !user.getPriority().equals("org")) return new ReturnJson<>(null, "您无权更新活动", false);
-        if (bindingResult.hasErrors()){
+        if (bindingResult.hasErrors() || activity.getInfo_id() == 0){
             List<FieldError> list = bindingResult.getFieldErrors();
             for (FieldError fieldError : list) System.out.println(fieldError.getField());
-            return new ReturnJson<>(null, "请检查您的输入信息", false);
+            return new ReturnJson<>(null, "请检查输入信息", false);
         }
         try {
             return activityService.updateActivity(activity, user.getUser_id()) ? new ReturnJson<>(new ActivityInfoDto(activity), "更新成功", true): new ReturnJson<>(null, "您无权更新活动", false);
         } catch (RuntimeException e){
-            return new ReturnJson<>(null, "发生一个意外的错误，更新活动失败", false);
+            System.out.println(e.getMessage());
+            return new ReturnJson<>(null, "更新活动失败", false);
         }
     }
 

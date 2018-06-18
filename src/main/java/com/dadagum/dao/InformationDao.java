@@ -22,5 +22,5 @@ public interface InformationDao {
      * @param type_id 类型id
      * @return
      */
-    public boolean hasInfo(int info_id, int type_id);
+    public boolean hasInfo(int info_id, int type_id, String table);
 }

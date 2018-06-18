@@ -30,8 +30,16 @@ public class CommentServiceImpl implements CommentService{
     public List<String> makeComment(Comment comment){
         List<String> result = DateValidator.validateComment(comment);
         if (result != null) return result;
-        // 检查对应信息是否存在
-        if(categoryDao.hasCategory(comment.getType_id()) && informationDao.hasInfo(comment.getInfo_id(), comment.getType_id())){
+        // 检查对应信息类型是否存在
+        if(categoryDao.hasCategory(comment.getType_id())){
+            // 暂时写为如下
+            String table = comment.getType_id() == 1 ? "team_info" : "activity_info";
+            if (! informationDao.hasInfo(comment.getInfo_id(), comment.getType_id(), table)){
+                // 被回复的评论不存在
+                result = new ArrayList<>();
+                result.add("要评论的信息不存在，评论失败！");
+                return result;
+            }
             Date now = new Date();
             comment.setCreate_time(ConvertUtil.DateToString(now));
             // 检查是回复还是评论
@@ -49,7 +57,7 @@ public class CommentServiceImpl implements CommentService{
         }
         // 被回复的评论不存在
         result = new ArrayList<>();
-        result.add("要评论的信息不存在，评论失败！");
+        result.add("要评论的信息类型不存在，评论失败！");
         return result;
     }
 

@@ -24,13 +24,14 @@ public class UserServiceImpl implements UserService{
 
     public List<String> addUser(User user, String r_password){
         List<String> msg = DateValidator.validateAllRegister(user, r_password); // TODO
-        if (msg == null && !userDao.hasUser(user)){
+        if (msg != null) return msg;
+        if (!userDao.hasUser(user)){
             userDao.addUser(user);
             return null;
         }
         // TODO
         msg = new ArrayList<>();
-        msg.add("error");
+        msg.add("用户名或者邮箱已经被注册");
         return msg;
     }
 

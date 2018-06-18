@@ -38,10 +38,10 @@ public class CommentController {
         if (bindingResult.hasErrors()){
             List<FieldError> list = bindingResult.getFieldErrors();
             for (FieldError fieldError : list) System.out.println(fieldError.getField());
-            return new ReturnJson<>(null, "传来的参数格式有错误", false);
+            return new ReturnJson<>(null, "请检查输入信息", false);
         }
         List<String> result = commentService.makeComment(comment);
-        return result == null ? new ReturnJson<>(new CommentDto(comment), "评论成功", true) : new ReturnJson<>(null, "评论失败", false);
+        return result == null ? new ReturnJson<>(new CommentDto(comment), "评论成功", true) : new ReturnJson<>(result, "评论失败", false);
     }
 
     /**
@@ -70,6 +70,6 @@ public class CommentController {
     public ReturnJson<?> viewSpecificComment(@PathVariable int type_id, @PathVariable int info_id){
         System.out.println(type_id + " " + info_id);
         List<CommentDto> result = commentService.getSpecificComment(type_id, info_id);
-        return result == null ? new ReturnJson<>(null, "信息不存在，无法查看评论", false) : new ReturnJson<>(result, "查看评论成功", true);
+        return result == null ? new ReturnJson<>(null, "无法查看评论", false) : new ReturnJson<>(result, "查看评论成功", true);
     }
 }

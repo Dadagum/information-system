@@ -10,7 +10,6 @@ public class InformationDaoImpl implements InformationDao{
 
     static final String INFO_REQUEST_TABLE = "info_addition_request";
 
-    private static final String CHECK_INFO_EXIST_SQL = "SELECT count(*) FROM " + ActivityDaoImpl.ACTIVITY_TABLE + " WHERE info_id = ? AND type_id = ?";
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -27,7 +26,8 @@ public class InformationDaoImpl implements InformationDao{
         jdbcTemplate.update(DELETE_REQUEST, info_id, type_id);
     }
 
-    public boolean hasInfo(int info_id, int type_id){
+    public boolean hasInfo(int info_id, int type_id, String table){
+        String CHECK_INFO_EXIST_SQL = "SELECT count(*) FROM " + table + " WHERE info_id = ? AND type_id = ?";
         return jdbcTemplate.queryForObject(CHECK_INFO_EXIST_SQL, new Object[]{info_id, type_id}, int.class) == 1;
     }
 }

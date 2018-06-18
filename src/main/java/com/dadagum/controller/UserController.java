@@ -36,7 +36,7 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             List<FieldError> list = bindingResult.getFieldErrors();
             for (FieldError fieldError : list) System.out.println(fieldError.getField());
-            return new ReturnJson<>(null, "请检查输入的信息", false);
+            return new ReturnJson<>(null, "请检查输入信息", false);
         }
         List<String> error = userService.addUser(user, r_password);
         if (error != null){
@@ -65,7 +65,7 @@ public class UserController {
             session.setAttribute("user", user);
             return new ReturnJson<>(null, "登陆成功", true);
         }
-        return new ReturnJson<>(null, "用户不存在或者密密码错误", false);
+        return new ReturnJson<>(null, "用户名密码错误", false);
     }
 
     /**
@@ -76,7 +76,7 @@ public class UserController {
     @RequestMapping(value = "/profile", method = RequestMethod.PATCH, produces = "application/json")
     @ResponseBody
     public ReturnJson<?> update(@RequestBody Map<String, String> password, HttpSession session){
-        if (password.get("password") == null) return new ReturnJson<>(null, "请填写修改后的密码", false);
+        if (password.get("password") == null) return new ReturnJson<>(null, "请填写新密码", false);
         System.out.println(password);
         User s_user = (User) session.getAttribute("user");
         if(s_user == null) return new ReturnJson<>(null, "请先登陆", false);
@@ -84,7 +84,7 @@ public class UserController {
         user.setPassword(password.get("password"));
         user.setUser_id(s_user.getUser_id());
         System.out.println(user.getUser_id());
-        return userService.update(user) ? new ReturnJson<>(new UserDto(user), "更新成功", true) : new ReturnJson<>(null, "您无权更新他人信息", false);
+        return userService.update(user) ? new ReturnJson<>(new UserDto(user), "更新成功", true) : new ReturnJson<>(null, "更新失败", false);
     }
 
     /**
